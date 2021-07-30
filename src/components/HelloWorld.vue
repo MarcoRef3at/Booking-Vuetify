@@ -94,7 +94,8 @@ export default {
     dragStart: null,
     createEvent: null,
     createStart: null,
-    extendOriginal: null
+    extendOriginal: null,
+    defaultDuration: 1 //in hours
   }),
   mounted() {
     this.$refs.calendar.checkChange();
@@ -114,6 +115,11 @@ export default {
         this.extendOriginal = null;
       }
     },
+    addDefaultDuration(date) {
+      // This Functions add default duration end time to new events
+      date = new Date(date);
+      return date.setHours(date.getHours() + this.defaultDuration);
+    },
 
     startTime(tms) {
       const mouse = this.toTime(tms);
@@ -124,11 +130,12 @@ export default {
       } else if (this.dragEvent == null) {
         // Create New Event if Clicked on empty slot
         this.createStart = this.roundTime(mouse);
+
         this.createEvent = {
           name: `Event #${this.events.length}`,
           color: this.rndElement(this.colors),
           start: this.createStart,
-          end: this.createStart,
+          end: this.addDefaultDuration(this.createStart),
           timed: true,
           editable: true
         };
