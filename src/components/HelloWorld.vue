@@ -28,11 +28,35 @@
           @click:event="showEvent"
           @click:more="viewDay"
           @click:date="viewDay"
+          @touchstart:event="startDrag"
+          @touchstart:time="startTime"
+          @touchmove:time="mouseMove"
+          @touchend:time="endDrag"
+          :start="new Date()"
+          :first-interval="16"
+          :interval-minutes="60"
+          :interval-count="8"
         >
-          <template v-slot:event="{ event, timed, eventSummary }">
-            <div class="v-event-draggable" v-html="eventSummary()"></div>
+          <template v-slot:event="{ event }">
+            <div class="v-event-draggable unSelectable">
+              {{ timeFormater(event.start) }} - {{ timeFormater(event.end) }}
+            </div>
+
+            <!-- Remove Icon Button -->
+            <v-btn
+              v-if="event.editable"
+              icon
+              color="pink"
+              @click="timeFormater(event.start)"
+              style="position: absolute;
+  right: 0px;"
+            >
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+
+            <!-- Drag down to extend event time -->
             <div
-              v-if="timed"
+              v-if="event.editable"
               class="v-event-drag-bottom"
               @mousedown.stop="extendBottom(event)"
             ></div>
@@ -101,6 +125,9 @@ export default {
     this.$refs.calendar.checkChange();
   },
   methods: {
+    deleteEvent(event) {
+      console.log("deleteEvent:", event);
+    },
     setEventDetailsOpen(value) {
       this.selectedOpen = value;
     },
@@ -114,6 +141,25 @@ export default {
         this.dragTime = null;
         this.extendOriginal = null;
       }
+    },
+    touched(event) {
+      console.log("touched:", event);
+    },
+    touchemove(event) {
+      console.log("touchemove:", event);
+    },
+    timeFormater(timestamp) {
+      let date = new Date(timestamp);
+      let hour = date.getHours();
+      let minute = date.getMinutes();
+
+      let ampm = hour >= 12 ? "PM" : "AM";
+      hour = hour % 12;
+      hour = hour ? hour : 12; // the hour '0' should be '12'
+      minute = minute < 10 ? "0" + minute : minute;
+      let formatedTime =
+        minute > 0 ? `${hour}:${minute} ${ampm}` : `${hour} ${ampm}`;
+      return formatedTime;
     },
     addDefaultDuration(date) {
       // This Functions add default duration end time to new events
@@ -220,6 +266,7 @@ export default {
       }
     },
     endDrag() {
+      console.log("popUp");
       this.dragTime = null;
       this.dragEvent = null;
       this.createEvent = null;
@@ -411,5 +458,14 @@ export default {
   &:hover::after {
     display: block;
   }
+}
+.unSelectable {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
 </style>
