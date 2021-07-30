@@ -268,22 +268,24 @@ export default {
       this.$refs.calendar.next();
     },
     showEvent({ nativeEvent, event }) {
-      const open = () => {
-        this.selectedEvent = event;
-        this.selectedElement = nativeEvent.target;
-        requestAnimationFrame(() =>
-          requestAnimationFrame(() => (this.selectedOpen = true))
-        );
-      };
+      if (event.editable) {
+        const open = () => {
+          this.selectedEvent = event;
+          this.selectedElement = nativeEvent.target;
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() => (this.selectedOpen = true))
+          );
+        };
 
-      if (this.selectedOpen) {
-        this.selectedOpen = false;
-        requestAnimationFrame(() => requestAnimationFrame(() => open()));
-      } else {
-        open();
+        if (this.selectedOpen) {
+          this.selectedOpen = false;
+          requestAnimationFrame(() => requestAnimationFrame(() => open()));
+        } else {
+          open();
+        }
+
+        nativeEvent.stopPropagation();
       }
-
-      nativeEvent.stopPropagation();
     },
     updateRange({ start, end }) {
       const events = [];
