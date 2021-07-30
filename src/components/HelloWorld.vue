@@ -166,7 +166,7 @@ export default {
       if (this.dragEvent && this.dragTime === null && this.dragEvent.editable) {
         const start = this.dragEvent.start;
         this.dragTime = mouse - start;
-      } else if (this.dragEvent == null) {
+      } else if (this.dragEvent == null && !this.selectedOpen) {
         // Create New Event if Clicked on empty slot
         this.createStart = this.roundTime(mouse);
 
@@ -210,6 +210,7 @@ export default {
         const min = Math.min(mouseRounded, this.createStart);
         const max = Math.max(mouseRounded, this.createStart);
         if (
+          this.createEvent.editable &&
           min - max != 0 &&
           !this.checkOverlapping(min, max, this.createEvent.id)
         ) {
