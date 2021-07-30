@@ -48,8 +48,7 @@
               icon
               color="pink"
               @click="timeFormater(event.start)"
-              style="position: absolute;
-  right: 0px;"
+              style="position: absolute; right: 0px;"
             >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
@@ -69,6 +68,7 @@
           :close-on-content-click="false"
           :activator="selectedElement"
           offset-x
+          scrollable
         >
           <EventDetails
             :selectedOpen="selectedOpen"
