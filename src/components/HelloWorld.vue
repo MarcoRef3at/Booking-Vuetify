@@ -166,9 +166,10 @@ export default {
         const mouseRounded = this.roundTime(mouse, false);
         const min = Math.min(mouseRounded, this.createStart);
         const max = Math.max(mouseRounded, this.createStart);
-
-        this.createEvent.start = min;
-        this.createEvent.end = max;
+        if (min - max != 0) {
+          this.createEvent.start = min;
+          this.createEvent.end = max;
+        }
       }
     },
     endDrag() {
