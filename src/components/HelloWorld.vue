@@ -144,15 +144,13 @@ export default {
       }
     },
     extendBottom(event) {
-      console.log("event.start:", event.start);
-      console.log("event.end:", event.end);
       this.createEvent = event;
       this.createStart = event.start;
       this.extendOriginal = event.end;
     },
     mouseMove(tms) {
       const mouse = this.toTime(tms);
-
+      // Dragging Function
       if (this.dragEvent && this.dragTime !== null) {
         const start = this.dragEvent.start;
         const end = this.dragEvent.end;
@@ -164,6 +162,7 @@ export default {
         this.dragEvent.start = newStart;
         this.dragEvent.end = newEnd;
       } else if (this.createEvent && this.createStart !== null) {
+        //  Buttom Extend in new events AND preCreated Events
         const mouseRounded = this.roundTime(mouse, false);
         const min = Math.min(mouseRounded, this.createStart);
         const max = Math.max(mouseRounded, this.createStart);
