@@ -95,7 +95,7 @@ export default {
     createEvent: null,
     createStart: null,
     extendOriginal: null,
-    defaultDuration: 1 //in hours
+    defaultDuration: 60 //minutes
   }),
   mounted() {
     this.$refs.calendar.checkChange();
@@ -118,7 +118,7 @@ export default {
     addDefaultDuration(date) {
       // This Functions add default duration end time to new events
       date = new Date(date);
-      return date.setHours(date.getHours() + this.defaultDuration);
+      return date.setMinutes(date.getMinutes() + this.defaultDuration);
     },
 
     startTime(tms) {
@@ -196,7 +196,7 @@ export default {
       this.dragEvent = null;
     },
     roundTime(time, down = true) {
-      const roundTo = 15; // minutes
+      const roundTo = this.defaultDuration; // minutes
       const roundDownTime = roundTo * 60 * 1000;
 
       return down
