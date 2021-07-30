@@ -121,6 +121,45 @@ export default {
       return date.setMinutes(date.getMinutes() + this.defaultDuration);
     },
 
+    dateRangeOverlaps(a_start, a_end, b_start, b_end) {
+      if (a_start < b_start && b_start < a_end) return true; // b starts in a
+      if (a_start < b_end && b_end < a_end) return true; // b ends in a
+      if (b_start < a_start && a_end < b_end) return true; // a in b
+      return false;
+    },
+
+    multipleDateRangeOverlaps(timeEntries) {
+      let i = 0,
+        j = 0;
+      let timeIntervals = timeEntries.filter(
+        entry => entry.start != null && entry.end != null
+      );
+
+      if (timeIntervals != null && timeIntervals.length > 1)
+        for (i = 0; i < timeIntervals.length - 1; i += 1) {
+          for (j = i + 1; j < timeIntervals.length; j += 1) {
+            if (
+              this.dateRangeOverlaps(
+                new Date(timeIntervals[i].start).getTime(),
+                new Date(timeIntervals[i].end).getTime(),
+                new Date(timeIntervals[j].start).getTime(),
+                new Date(timeIntervals[j].end).getTime()
+              )
+            )
+              return true;
+          }
+        }
+      return false;
+    },
+
+    checkOverlapping(start, end, eventId) {
+      let allOtherEvents = this.events.filter(event => event.id != eventId);
+      let allowed = allOtherEvents.map(event => {
+        return this.dateRangeOverlaps(event.start, event.end, start, end);
+      });
+      return allowed.some(value => value);
+    },
+
     startTime(tms) {
       const mouse = this.toTime(tms);
 
@@ -132,6 +171,7 @@ export default {
         this.createStart = this.roundTime(mouse);
 
         this.createEvent = {
+          id: this.events.length,
           name: `Event #${this.events.length}`,
           color: this.rndElement(this.colors),
           start: this.createStart,
@@ -159,14 +199,20 @@ export default {
         const newStart = this.roundTime(newStartTime);
         const newEnd = newStart + duration;
 
-        this.dragEvent.start = newStart;
-        this.dragEvent.end = newEnd;
+        // If not overlapping any other events
+        if (!this.checkOverlapping(newStart, newEnd, this.dragEvent.id)) {
+          this.dragEvent.start = newStart;
+          this.dragEvent.end = newEnd;
+        }
       } else if (this.createEvent && this.createStart !== null) {
         //  Buttom Extend in new events AND preCreated Events
         const mouseRounded = this.roundTime(mouse, false);
         const min = Math.min(mouseRounded, this.createStart);
         const max = Math.max(mouseRounded, this.createStart);
-        if (min - max != 0) {
+        if (
+          min - max != 0 &&
+          !this.checkOverlapping(min, max, this.createEvent.id)
+        ) {
           this.createEvent.start = min;
           this.createEvent.end = max;
         }
@@ -241,6 +287,7 @@ export default {
         const end = start + secondTimestamp;
 
         events.push({
+          id: this.events.length,
           name: this.rndElement(this.names),
           color: this.rndElement(this.colors),
           start,
@@ -310,6 +357,7 @@ export default {
         const second = new Date(first.getTime() + secondTimestamp);
 
         events.push({
+          id: this.events.length,
           name: this.names[this.rnd(0, this.names.length - 1)],
           start: first,
           end: second,
