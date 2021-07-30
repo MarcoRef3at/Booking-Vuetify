@@ -106,6 +106,7 @@ export default {
     setCalendarType(newType) {
       this.type = newType;
     },
+
     startDrag({ event, timed }) {
       if (event && timed) {
         this.dragEvent = event;
@@ -113,21 +114,23 @@ export default {
         this.extendOriginal = null;
       }
     },
+
     startTime(tms) {
       const mouse = this.toTime(tms);
 
-      if (this.dragEvent && this.dragTime === null) {
+      if (this.dragEvent && this.dragTime === null && this.dragEvent.editable) {
         const start = this.dragEvent.start;
-
         this.dragTime = mouse - start;
-      } else {
+      } else if (this.dragEvent == null) {
+        // Create New Event if Clicked on empty slot
         this.createStart = this.roundTime(mouse);
         this.createEvent = {
           name: `Event #${this.events.length}`,
           color: this.rndElement(this.colors),
           start: this.createStart,
           end: this.createStart,
-          timed: true
+          timed: true,
+          editable: true
         };
 
         this.events.push(this.createEvent);
@@ -235,7 +238,8 @@ export default {
           color: this.rndElement(this.colors),
           start,
           end,
-          timed
+          timed,
+          editable: false
         });
       }
 
@@ -301,7 +305,8 @@ export default {
           start: first,
           end: second,
           color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: !allDay
+          timed: !allDay,
+          editable: false
         });
       }
 
