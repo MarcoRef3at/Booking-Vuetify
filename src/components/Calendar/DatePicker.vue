@@ -24,8 +24,32 @@
 </template>
 
 <script>
+import { mapGetters, mapState, mapMutations, mapActions } from "vuex";
 export default {
-  props: ["date"],
+  computed: {
+    ...mapState("events", ["selectedEvent"]),
+    ...mapGetters("events", ["getDate"]),
+    ...mapActions("events", ["updateSelectedEvent"]),
+    date: {
+      get() {
+        let eventDate = new Date(this.selectedEvent.start);
+
+        eventDate =
+          eventDate.getFullYear() +
+          "-" +
+          (eventDate.getMonth() + 1) +
+          "-" +
+          eventDate.getDate();
+        return eventDate;
+      },
+      set(date) {
+        date = date.split("-");
+        let newDate = new Date(date[2], date[1] - 1, date[0]);
+        this.updateSelectedEvent(newDate);
+      },
+    },
+  },
+
   data: () => ({
     // date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
     //   .toISOString()

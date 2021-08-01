@@ -12,7 +12,7 @@ const actions = {
   },
 };
 const getters = {
-  devicesPerGrid: (state) => state.devicesPerGrid,
+  getDate: (state) => state.selectedEvent.start,
 };
 
 export default {
