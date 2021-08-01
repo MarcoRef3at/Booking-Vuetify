@@ -12,9 +12,6 @@ const actions = {
   }
 };
 const getters = {
-  getStartTime: state => {
-    return state.selectedEvent.start;
-  },
   getDate: state => {
     let eventDate = new Date(state.selectedEvent.start);
     eventDate =

@@ -40,7 +40,7 @@ export default {
   },
   computed: {
     ...mapState("events", ["selectedEvent"]),
-    ...mapGetters("events", ["getDate", "getStartTime"]),
+    ...mapGetters("events", ["getDate"]),
 
     date: {
       get() {
@@ -52,7 +52,7 @@ export default {
         let month = new Date(dateToSet).getMonth() + 1;
         let year = new Date(dateToSet).getFullYear();
         // Extract Previous Timestamp
-        let eventDate = new Date(this.getStartTime);
+        let eventDate = new Date(this.selectedEvent.start);
         // Change Dates only in Previous Timestamp
         eventDate.setDate(day); //day
         eventDate.setMonth(month); //Month

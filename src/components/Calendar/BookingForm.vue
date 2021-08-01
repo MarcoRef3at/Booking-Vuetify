@@ -86,14 +86,26 @@ export default {
     ...mapGetters("events", ["getTimeFrom", "getTimeTo"])
   },
   methods: {
+    ...mapActions("events", ["updateSelectedEvent"]),
     setTimeFrom(timeFrom) {
-      let timestamp = new Date(timeFrom);
-      console.log("timestamp:", timestamp);
-      // let event = this.selectedEvent;
-      // event.start = timestamp;
+      let hours = timeFrom.split(":")[0];
+      let minutes = timeFrom.split(":")[1];
+
+      let eventStart = new Date(this.selectedEvent.start);
+      eventStart.setHours(hours, minutes);
+      let event = this.selectedEvent;
+      event.start = eventStart;
+      this.updateSelectedEvent(event);
     },
     setTimeTo(timeTo) {
-      console.log("timeTo:", timeTo);
+      let hours = timeTo.split(":")[0];
+      let minutes = timeTo.split(":")[1];
+
+      let eventStart = new Date(this.selectedEvent.end);
+      eventStart.setHours(hours, minutes);
+      let event = this.selectedEvent;
+      event.end = eventStart;
+      this.updateSelectedEvent(event);
     }
   },
   data() {
