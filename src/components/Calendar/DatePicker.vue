@@ -25,13 +25,13 @@
 
 <script>
 export default {
+  props: ["date"],
   data: () => ({
-    date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-      .toISOString()
-      .substr(0, 10),
+    // date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+    //   .toISOString()
+    //   .substr(0, 10),
     menu: false,
-    modal: false,
-    menu2: false
-  })
+    menu2: false,
+  }),
 };
 </script>

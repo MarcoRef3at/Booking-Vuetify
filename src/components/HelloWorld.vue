@@ -1,5 +1,5 @@
 <template>
-  <v-row class="fill-height">
+  <v-row>
     <v-col>
       <CalendarHeader
         @setToday="setToday"
@@ -63,35 +63,27 @@
         </v-calendar>
 
         <!-- Event Details Menu -->
-        <v-menu
-          v-model="selectedOpen"
-          :close-on-content-click="false"
-          :activator="selectedElement"
-          offset-x
-          scrollable
-        >
-          <EventDetails
-            :selectedOpen="selectedOpen"
-            :selectedElement="selectedElement"
-            :selectedEvent="selectedEvent"
+        <v-dialog v-model="selectedOpen" scrollable max-width="600px">
+          <EventDialog
+            :close-on-content-click="false"
             @setEventDetailsOpen="setEventDetailsOpen"
           />
-        </v-menu>
+          <!-- :activator="selectedElement" -->
+        </v-dialog>
       </v-sheet>
     </v-col>
   </v-row>
 </template>
 <script>
-import EventDetails from "./Calendar/EventDetails.vue";
+import EventDialog from "./Calendar/EventDialog.vue";
 import CalendarHeader from "./Calendar/CalendarHeader.vue";
+import { mapState, mapActions } from "vuex";
 export default {
-  components: { CalendarHeader, EventDetails },
+  components: { CalendarHeader, EventDialog },
   data: () => ({
     focus: "",
     type: "week",
 
-    selectedEvent: {},
-    selectedElement: null,
     selectedOpen: false,
     value: "",
     events: [],
@@ -102,7 +94,7 @@ export default {
       "#00BCD4",
       "#4CAF50",
       "#FF9800",
-      "#757575"
+      "#757575",
     ],
     names: [
       "Meeting",
@@ -112,19 +104,20 @@ export default {
       "Event",
       "Birthday",
       "Conference",
-      "Party"
+      "Party",
     ],
     dragEvent: null,
     dragStart: null,
     createEvent: null,
     createStart: null,
     extendOriginal: null,
-    defaultDuration: 60 //minutes
+    defaultDuration: 60, //minutes
   }),
   mounted() {
     this.$refs.calendar.checkChange();
   },
   methods: {
+    ...mapActions("events", ["updateSelectedEvent"]),
     deleteEvent(event) {
       console.log("deleteEvent:", event);
     },
@@ -178,7 +171,7 @@ export default {
       let i = 0,
         j = 0;
       let timeIntervals = timeEntries.filter(
-        entry => entry.start != null && entry.end != null
+        (entry) => entry.start != null && entry.end != null
       );
 
       if (timeIntervals != null && timeIntervals.length > 1)
@@ -199,11 +192,11 @@ export default {
     },
 
     checkOverlapping(start, end, eventId) {
-      let allOtherEvents = this.events.filter(event => event.id != eventId);
-      let allowed = allOtherEvents.map(event => {
+      let allOtherEvents = this.events.filter((event) => event.id != eventId);
+      let allowed = allOtherEvents.map((event) => {
         return this.dateRangeOverlaps(event.start, event.end, start, end);
       });
-      return allowed.some(value => value);
+      return allowed.some((value) => value);
     },
 
     startTime(tms) {
@@ -223,7 +216,7 @@ export default {
           start: this.createStart,
           end: this.addDefaultDuration(this.createStart),
           timed: true,
-          editable: true
+          editable: true,
         };
 
         this.events.push(this.createEvent);
@@ -341,7 +334,7 @@ export default {
           start,
           end,
           timed,
-          editable: false
+          editable: false,
         });
       }
 
@@ -372,8 +365,7 @@ export default {
     showEvent({ nativeEvent, event }) {
       if (event.editable) {
         const open = () => {
-          this.selectedEvent = event;
-          this.selectedElement = nativeEvent.target;
+          this.updateSelectedEvent(event);
           requestAnimationFrame(() =>
             requestAnimationFrame(() => (this.selectedOpen = true))
           );
@@ -389,38 +381,7 @@ export default {
         nativeEvent.stopPropagation();
       }
     },
-    updateRange({ start, end }) {
-      const events = [];
-
-      const min = new Date(`${start.date}T00:00:00`);
-      const max = new Date(`${end.date}T23:59:59`);
-      const days = (max.getTime() - min.getTime()) / 86400000;
-      const eventCount = this.rnd(days, days + 20);
-
-      for (let i = 0; i < eventCount; i++) {
-        const allDay = this.rnd(0, 3) === 0;
-        const firstTimestamp = this.rnd(min.getTime(), max.getTime());
-        const first = new Date(firstTimestamp - (firstTimestamp % 900000));
-        const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000;
-        const second = new Date(first.getTime() + secondTimestamp);
-
-        events.push({
-          id: this.events.length,
-          name: this.names[this.rnd(0, this.names.length - 1)],
-          start: first,
-          end: second,
-          color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: !allDay,
-          editable: false
-        });
-      }
-
-      this.events = events;
-    },
-    rnd(a, b) {
-      return Math.floor((b - a + 1) * Math.random()) + a;
-    }
-  }
+  },
 };
 </script>
 

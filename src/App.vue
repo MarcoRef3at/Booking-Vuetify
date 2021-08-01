@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="fill-height">
     <!-- <v-app-bar
       app
       color="primary"
@@ -50,11 +50,11 @@ export default {
   name: "App",
 
   components: {
-    HelloWorld
+    HelloWorld,
   },
 
   data: () => ({
     //
-  })
+  }),
 };
 </script>
