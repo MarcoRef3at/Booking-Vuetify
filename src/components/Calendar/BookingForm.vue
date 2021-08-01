@@ -4,7 +4,7 @@
       <v-row>
         <!-- Date Picker -->
         <v-col cols="12">
-          <DatePicker :date="date" />
+          <DatePicker />
         </v-col>
 
         <!-- TimeFrom Picker -->
@@ -70,28 +70,16 @@ import { mapState } from "vuex";
 export default {
   components: {
     DatePicker,
-    TimePicker,
+    TimePicker
   },
-  beforeMount() {
-    let eventDate = new Date(this.selectedEvent.start);
 
-    eventDate =
-      eventDate.getFullYear() +
-      "-" +
-      (eventDate.getMonth() + 1) +
-      "-" +
-      eventDate.getDate();
-
-    this.date = eventDate;
-  },
   computed: {
-    ...mapState("events", ["selectedEvent"]),
+    ...mapState("events", ["selectedEvent"])
   },
   data() {
     return {
-      date: "2021-05-05",
-      notes: "",
+      notes: ""
     };
-  },
+  }
 };
 </script>
