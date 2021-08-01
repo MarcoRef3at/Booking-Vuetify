@@ -12,7 +12,18 @@ const actions = {
   }
 };
 const getters = {
-  getDate: state => state.selectedEvent.start
+  getDate: state => {
+    let eventDate = new Date(state.selectedEvent.start);
+    eventDate =
+      eventDate.getFullYear() +
+      "-" +
+      (eventDate.getMonth() + 1) +
+      "-" +
+      eventDate.getDate();
+    return eventDate;
+  },
+  getTimeFrom: state => state.selectedEvent.start,
+  getTimeTo: state => state.selectedEvent.end
 };
 
 export default {

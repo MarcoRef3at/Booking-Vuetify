@@ -40,11 +40,11 @@ export default {
   },
   computed: {
     ...mapState("events", ["selectedEvent"]),
+    ...mapGetters("events", ["getDate"]),
 
     date: {
       get() {
-        let eventDate = new Date(this.selectedEvent.start);
-        return this.timeFormatter(eventDate);
+        return this.getDate;
       },
       set(dateToSet) {
         let timestamp = new Date(dateToSet).getTime();
