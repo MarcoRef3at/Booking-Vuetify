@@ -32,11 +32,19 @@
 
 <script>
 export default {
-  props: ["title"],
+  props: ["title", "parentTime"],
+  computed: {
+    time: {
+      get() {
+        return this.parentTime;
+      },
+      set(timeToSet) {
+        this.$emit("setTime", timeToSet);
+      }
+    }
+  },
   data() {
     return {
-      time: null,
-      menu2: false,
       modal2: false
     };
   }

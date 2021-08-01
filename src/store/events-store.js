@@ -12,6 +12,9 @@ const actions = {
   }
 };
 const getters = {
+  getStartTime: state => {
+    return state.selectedEvent.start;
+  },
   getDate: state => {
     let eventDate = new Date(state.selectedEvent.start);
     eventDate =
@@ -22,8 +25,18 @@ const getters = {
       eventDate.getDate();
     return eventDate;
   },
-  getTimeFrom: state => state.selectedEvent.start,
-  getTimeTo: state => state.selectedEvent.end
+  getTimeFrom: state => {
+    let date = new Date(state.selectedEvent.start);
+    let hours = date.getHours();
+    let minutes = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
+    return `${hours}:${minutes}`;
+  },
+  getTimeTo: state => {
+    let date = new Date(state.selectedEvent.end);
+    let hours = date.getHours();
+    let minutes = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
+    return `${hours}:${minutes}`;
+  }
 };
 
 export default {

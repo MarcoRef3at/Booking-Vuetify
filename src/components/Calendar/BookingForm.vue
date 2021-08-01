@@ -9,10 +9,18 @@
 
         <!-- TimeFrom Picker -->
         <v-col cols="11" sm="6">
-          <TimePicker :title="'Time From'" />
+          <TimePicker
+            :title="'Time From'"
+            :parentTime="getTimeFrom"
+            @setTime="setTimeFrom"
+          />
         </v-col>
         <v-col cols="11" sm="6">
-          <TimePicker :title="'Time to'" />
+          <TimePicker
+            :title="'Time to'"
+            :parentTime="getTimeTo"
+            @setTime="setTimeTo"
+          />
         </v-col>
 
         <!-- Court Select -->
@@ -66,7 +74,7 @@
 <script>
 import TimePicker from "./TimePicker.vue";
 import DatePicker from "./DatePicker.vue";
-import { mapState } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   components: {
     DatePicker,
@@ -74,7 +82,19 @@ export default {
   },
 
   computed: {
-    ...mapState("events", ["selectedEvent"])
+    ...mapState("events", ["selectedEvent"]),
+    ...mapGetters("events", ["getTimeFrom", "getTimeTo"])
+  },
+  methods: {
+    setTimeFrom(timeFrom) {
+      let timestamp = new Date(timeFrom);
+      console.log("timestamp:", timestamp);
+      // let event = this.selectedEvent;
+      // event.start = timestamp;
+    },
+    setTimeTo(timeTo) {
+      console.log("timeTo:", timeTo);
+    }
   },
   data() {
     return {
