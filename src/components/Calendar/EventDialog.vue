@@ -11,7 +11,7 @@
       <v-spacer></v-spacer>
 
       <!-- Delete Button -->
-      <v-btn icon>
+      <v-btn icon @click="deleteEvents">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
 
@@ -43,11 +43,18 @@
 </template>
 <script>
 import BookingForm from "./BookingForm.vue";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 export default {
   components: { BookingForm },
   computed: {
     ...mapState("events", ["selectedEvent"])
+  },
+  methods: {
+    ...mapActions("events", ["deleteEvent"]),
+    deleteEvents() {
+      this.deleteEvent(this.selectedEvent);
+      this.$emit("setEventDetailsOpen", false);
+    }
   }
 };
 </script>

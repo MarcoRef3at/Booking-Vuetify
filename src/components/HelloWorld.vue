@@ -50,7 +50,7 @@
               @click="timeFormater(event.start)"
               style="position: absolute; right: 0px;"
             >
-              <v-icon>mdi-delete</v-icon>
+              <v-icon @click="deleteEvent(event)">mdi-delete</v-icon>
             </v-btn>
 
             <!-- Drag down to extend event time -->
@@ -127,10 +127,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions("events", ["updateSelectedEvent", "updateEvents"]),
-    deleteEvent(event) {
-      console.log("deleteEvent:", event);
-    },
+    ...mapActions("events", [
+      "updateSelectedEvent",
+      "updateEvents",
+      "deleteEvent"
+    ]),
+
     setEventDetailsOpen(value) {
       this.selectedOpen = value;
     },

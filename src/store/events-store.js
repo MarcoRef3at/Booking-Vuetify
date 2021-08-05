@@ -8,6 +8,9 @@ const mutations = {
   },
   updateEvents(state, payload) {
     state.eventsArr = payload;
+  },
+  deleteEvent(state, payload) {
+    state.eventsArr = state.eventsArr.filter(e => e.id != payload.id);
   }
 };
 const actions = {
@@ -16,6 +19,9 @@ const actions = {
   },
   updateEvents({ commit }, payload) {
     commit("updateEvents", payload);
+  },
+  deleteEvent({ commit }, payload) {
+    commit("deleteEvent", payload);
   },
 
   checkOverlapping({ dispatch }, payload) {
