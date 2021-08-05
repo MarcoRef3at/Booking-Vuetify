@@ -33,10 +33,8 @@ const actions = {
       clientApi
         .post("reservation", {
           serviceId: 1,
-          start: new Date(state.selectedEvent.start).valueOf({
-            timeZone: "Africa/Cairo"
-          }),
-          end: state.selectedEvent.end.valueOf({ timeZone: "Africa/Cairo" })
+          start: state.selectedEvent.start,
+          end: state.selectedEvent.end
         })
         .then(res => {
           console.log("r:", res.data);
@@ -45,7 +43,7 @@ const actions = {
           resolve(res); //returns x in .then
         })
         .catch(err => {
-          console.log("err:", err.response);
+          console.log("err:", err.response.data);
           reject(err); //returns y in .catch
         });
     });

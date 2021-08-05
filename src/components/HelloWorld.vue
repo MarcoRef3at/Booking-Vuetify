@@ -182,9 +182,16 @@ export default {
     },
 
     checkOverlapping(start, end, eventId) {
-      let allOtherEvents = this.events.filter(event => event.id != eventId);
+      const dateRangeOverlaps = (a_start, a_end, b_start, b_end) => {
+        if (a_start < b_start && b_start < a_end) return true; // b starts in a
+        if (a_start < b_end && b_end < a_end) return true; // b ends in a
+        if (b_start < a_start && a_end < b_end) return true; // a in b
+        return false;
+      };
+
+      let allOtherEvents = this.eventsArr.filter(event => event.id != eventId);
       let allowed = allOtherEvents.map(event => {
-        return this.dateRangeOverlaps(event.start, event.end, start, end);
+        return dateRangeOverlaps(event.start, event.end, start, end);
       });
       return allowed.some(value => value);
     },
@@ -200,8 +207,8 @@ export default {
         this.createStart = this.roundTime(mouse);
 
         this.createEvent = {
-          id: this.events.length,
-          name: `Event #${this.events.length}`,
+          id: this.rnd(this.events.length, 9999),
+          name: `Event #${this.rnd(this.events.length, 99)}`,
           color: this.rndElement(this.colors),
           start: this.createStart,
           end: this.addDefaultDuration(this.createStart),
@@ -305,7 +312,7 @@ export default {
       this.getAllEvents();
     },
     rnd(a, b) {
-      return Math.floor((b - a + 1) * Math.random()) + a;
+      return Math.floor((b - a + 5) * Math.random()) + a;
     },
     rndElement(arr) {
       return arr[this.rnd(0, arr.length - 1)];
