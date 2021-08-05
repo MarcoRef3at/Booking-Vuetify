@@ -48,23 +48,14 @@ export default {
     ...mapState("events", ["selectedEvent"])
   },
   methods: {
-    ...mapActions("events", ["deleteEvent"]),
+    ...mapActions("events", ["deleteEvent", "bookEvent"]),
     deleteEvents() {
       this.deleteEvent(this.selectedEvent);
       this.$emit("setEventDetailsOpen", false);
     },
+
     payNow() {
-      apiClient
-        .post("reservation", {
-          serviceId: 1,
-          dateFrom: this.selectedEvent.start,
-          dateTo: this.selectedEvent.end
-        })
-        .then(res => {
-          console.log("r:", res.data);
-          this.$emit("setEventDetailsOpen", false);
-        })
-        .catch(err => console.log("err:", err.response.data.error));
+      this.bookEvent().then(() => this.$emit("setEventDetailsOpen", false));
     }
   }
 };

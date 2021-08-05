@@ -1,3 +1,4 @@
+import clientApi from "../api/client";
 const state = {
   eventsArr: [],
   selectedEvent: {}
@@ -14,6 +15,41 @@ const mutations = {
   }
 };
 const actions = {
+  getAllEvents({ commit }) {
+    clientApi.get("reservation").then(events => {
+      events.data.data.forEach(event => {
+        event.start = new Date(event.start).getTime();
+        event.end = new Date(event.end).getTime();
+        event.name = "Blocked";
+        event.color = "#757575";
+        event.timed = true;
+        event.editable = false;
+      });
+      commit("updateEvents", events.data.data);
+    });
+  },
+  bookEvent({ dispatch }) {
+    return new Promise((resolve, reject) => {
+      clientApi
+        .post("reservation", {
+          serviceId: 1,
+          start: new Date(state.selectedEvent.start).valueOf({
+            timeZone: "Africa/Cairo"
+          }),
+          end: state.selectedEvent.end.valueOf({ timeZone: "Africa/Cairo" })
+        })
+        .then(res => {
+          console.log("r:", res.data);
+
+          dispatch("getAllEvents");
+          resolve(res); //returns x in .then
+        })
+        .catch(err => {
+          console.log("err:", err.response);
+          reject(err); //returns y in .catch
+        });
+    });
+  },
   updateSelectedEvent({ commit }, payload) {
     commit("updateSelectedEvent", payload);
   },

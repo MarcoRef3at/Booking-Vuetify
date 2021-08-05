@@ -83,6 +83,7 @@
 import EventDialog from "./Calendar/EventDialog.vue";
 import CalendarHeader from "./Calendar/CalendarHeader.vue";
 import { mapState, mapActions } from "vuex";
+
 export default {
   components: { CalendarHeader, EventDialog },
   data: () => ({
@@ -130,7 +131,8 @@ export default {
     ...mapActions("events", [
       "updateSelectedEvent",
       "updateEvents",
-      "deleteEvent"
+      "deleteEvent",
+      "getAllEvents"
     ]),
 
     setEventDetailsOpen(value) {
@@ -247,7 +249,6 @@ export default {
       }
     },
     endDrag() {
-      console.log("popUp");
       this.dragTime = null;
       this.dragEvent = null;
       this.createEvent = null;
@@ -301,32 +302,7 @@ export default {
         : event.color;
     },
     getEvents({ start, end }) {
-      const events = [];
-
-      const min = new Date(`${start.date}T17:00:00`).getTime();
-      const max = new Date(`${end.date}T23:00:00`).getTime();
-      const days = (max - min) / 86400000;
-      const eventCount = this.rnd(days, days + 20);
-
-      for (let i = 0; i < eventCount; i++) {
-        const timed = this.rnd(0, 3) !== 0;
-        const firstTimestamp = this.rnd(min, max);
-        const secondTimestamp = this.rnd(2, timed ? 8 : 288) * 900000;
-        const start = firstTimestamp - (firstTimestamp % 900000);
-        const end = new Date(start).setHours(new Date(start).getHours() + 1);
-
-        events.push({
-          id: this.events.length,
-          name: this.rndElement(this.names),
-          color: "#757575",
-          start,
-          end,
-          timed,
-          editable: false
-        });
-      }
-
-      this.events = events;
+      this.getAllEvents();
     },
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
