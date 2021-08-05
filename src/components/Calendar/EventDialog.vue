@@ -47,7 +47,7 @@ import { mapState } from "vuex";
 export default {
   components: { BookingForm },
   computed: {
-    ...mapState("events", ["selectedEvent"]),
-  },
+    ...mapState("events", ["selectedEvent"])
+  }
 };
 </script>

@@ -33,7 +33,7 @@
           @touchmove:time="mouseMove"
           @touchend:time="endDrag"
           :start="new Date()"
-          :first-interval="16"
+          :first-interval="15"
           :interval-minutes="60"
           :interval-count="8"
         >
@@ -63,7 +63,12 @@
         </v-calendar>
 
         <!-- Event Details Menu -->
-        <v-dialog v-model="selectedOpen" scrollable max-width="600px">
+        <v-dialog
+          v-model="selectedOpen"
+          persistent
+          scrollable
+          max-width="600px"
+        >
           <EventDialog
             :close-on-content-click="false"
             @setEventDetailsOpen="setEventDetailsOpen"
@@ -86,16 +91,8 @@ export default {
 
     selectedOpen: false,
     value: "",
-    events: [],
-    colors: [
-      "#2196F3",
-      "#3F51B5",
-      "#673AB7",
-      "#00BCD4",
-      "#4CAF50",
-      "#FF9800",
-      "#757575",
-    ],
+    // events: [],
+    colors: ["#2196F3", "#3F51B5", "#673AB7", "#00BCD4", "#4CAF50", "#FF9800"],
     names: [
       "Meeting",
       "Holiday",
@@ -104,20 +101,33 @@ export default {
       "Event",
       "Birthday",
       "Conference",
-      "Party",
+      "Party"
     ],
     dragEvent: null,
     dragStart: null,
     createEvent: null,
     createStart: null,
     extendOriginal: null,
-    defaultDuration: 60, //minutes
+    defaultDuration: 60 //minutes
   }),
   mounted() {
     this.$refs.calendar.checkChange();
   },
+
+  computed: {
+    ...mapState("events", ["eventsArr"]),
+
+    events: {
+      get() {
+        return this.eventsArr;
+      },
+      set(value) {
+        this.updateEvents(value);
+      }
+    }
+  },
   methods: {
-    ...mapActions("events", ["updateSelectedEvent"]),
+    ...mapActions("events", ["updateSelectedEvent", "updateEvents"]),
     deleteEvent(event) {
       console.log("deleteEvent:", event);
     },
@@ -167,36 +177,12 @@ export default {
       return false;
     },
 
-    multipleDateRangeOverlaps(timeEntries) {
-      let i = 0,
-        j = 0;
-      let timeIntervals = timeEntries.filter(
-        (entry) => entry.start != null && entry.end != null
-      );
-
-      if (timeIntervals != null && timeIntervals.length > 1)
-        for (i = 0; i < timeIntervals.length - 1; i += 1) {
-          for (j = i + 1; j < timeIntervals.length; j += 1) {
-            if (
-              this.dateRangeOverlaps(
-                new Date(timeIntervals[i].start).getTime(),
-                new Date(timeIntervals[i].end).getTime(),
-                new Date(timeIntervals[j].start).getTime(),
-                new Date(timeIntervals[j].end).getTime()
-              )
-            )
-              return true;
-          }
-        }
-      return false;
-    },
-
     checkOverlapping(start, end, eventId) {
-      let allOtherEvents = this.events.filter((event) => event.id != eventId);
-      let allowed = allOtherEvents.map((event) => {
+      let allOtherEvents = this.events.filter(event => event.id != eventId);
+      let allowed = allOtherEvents.map(event => {
         return this.dateRangeOverlaps(event.start, event.end, start, end);
       });
-      return allowed.some((value) => value);
+      return allowed.some(value => value);
     },
 
     startTime(tms) {
@@ -216,7 +202,7 @@ export default {
           start: this.createStart,
           end: this.addDefaultDuration(this.createStart),
           timed: true,
-          editable: true,
+          editable: true
         };
 
         this.events.push(this.createEvent);
@@ -315,8 +301,8 @@ export default {
     getEvents({ start, end }) {
       const events = [];
 
-      const min = new Date(`${start.date}T00:00:00`).getTime();
-      const max = new Date(`${end.date}T23:59:59`).getTime();
+      const min = new Date(`${start.date}T17:00:00`).getTime();
+      const max = new Date(`${end.date}T23:00:00`).getTime();
       const days = (max - min) / 86400000;
       const eventCount = this.rnd(days, days + 20);
 
@@ -325,16 +311,16 @@ export default {
         const firstTimestamp = this.rnd(min, max);
         const secondTimestamp = this.rnd(2, timed ? 8 : 288) * 900000;
         const start = firstTimestamp - (firstTimestamp % 900000);
-        const end = start + secondTimestamp;
+        const end = new Date(start).setHours(new Date(start).getHours() + 1);
 
         events.push({
           id: this.events.length,
           name: this.rndElement(this.names),
-          color: this.rndElement(this.colors),
+          color: "#757575",
           start,
           end,
           timed,
-          editable: false,
+          editable: false
         });
       }
 
@@ -380,8 +366,8 @@ export default {
 
         nativeEvent.stopPropagation();
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

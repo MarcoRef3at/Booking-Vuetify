@@ -2,23 +2,31 @@
   <div>
     <v-container>
       <v-row>
+        <v-alert
+          color="red"
+          width="100%"
+          elevation="10"
+          type="error"
+          v-if="overlapping"
+          >Selected Time Overlaps another reservation</v-alert
+        >
         <!-- Date Picker -->
         <v-col cols="12">
-          <DatePicker />
+          <DatePicker :parentDate="date" @setDate="setDate" />
         </v-col>
 
         <!-- TimeFrom Picker -->
         <v-col cols="11" sm="6">
           <TimePicker
             :title="'Time From'"
-            :parentTime="getTimeFrom"
+            :parentTime="timeFrom"
             @setTime="setTimeFrom"
           />
         </v-col>
         <v-col cols="11" sm="6">
           <TimePicker
             :title="'Time to'"
-            :parentTime="getTimeTo"
+            :parentTime="timeTo"
             @setTime="setTimeTo"
           />
         </v-col>
@@ -30,19 +38,6 @@
             label="Select Court"
             required
           ></v-select>
-        </v-col>
-
-        <!-- Notes -->
-        <v-col cols="12">
-          <v-textarea
-            v-model="notes"
-            color="teal"
-            hint="Any Further information (visible only to booking administrator"
-          >
-            <template v-slot:label>
-              <div>Notes <small>(optional)</small></div>
-            </template>
-          </v-textarea>
         </v-col>
 
         <!-- Details -->
@@ -80,38 +75,79 @@ export default {
     DatePicker,
     TimePicker
   },
+  data() {
+    return {
+      notes: "",
+      date: "",
+      timeFrom: "",
+      timeTo: "",
+      overlapping: false
+    };
+  },
+  mounted() {
+    this.date = this.getDate;
+    this.timeFrom = this.getTimeFrom;
+    this.timeTo = this.getTimeTo;
+  },
 
   computed: {
     ...mapState("events", ["selectedEvent"]),
-    ...mapGetters("events", ["getTimeFrom", "getTimeTo"])
+    ...mapGetters("events", ["getTimeFrom", "getTimeTo", "getDate"])
   },
   methods: {
-    ...mapActions("events", ["updateSelectedEvent"]),
+    ...mapActions("events", ["updateSelectedEvent", "checkOverlapping"]),
+    setDate(date) {
+      this.date = date;
+    },
     setTimeFrom(timeFrom) {
       let hours = timeFrom.split(":")[0];
       let minutes = timeFrom.split(":")[1];
+      this.timeFrom = timeFrom;
 
-      let eventStart = new Date(this.selectedEvent.start);
-      eventStart.setHours(hours, minutes);
-      let event = this.selectedEvent;
-      event.start = eventStart;
-      this.updateSelectedEvent(event);
+      // let eventStart = new Date(this.selectedEvent.start);
+      // eventStart.setHours(hours, minutes);
+      // let event = this.selectedEvent;
+      // event.start = eventStart;
+      // this.updateSelectedEvent(event);
     },
     setTimeTo(timeTo) {
       let hours = timeTo.split(":")[0];
       let minutes = timeTo.split(":")[1];
+      this.timeTo = timeTo;
+      this.updateEvent();
 
-      let eventStart = new Date(this.selectedEvent.end);
-      eventStart.setHours(hours, minutes);
-      let event = this.selectedEvent;
-      event.end = eventStart;
-      this.updateSelectedEvent(event);
+      // let eventStart = new Date(this.selectedEvent.end);
+      // eventStart.setHours(hours, minutes);
+      // let event = this.selectedEvent;
+      // event.end = eventStart;
+      // this.updateSelectedEvent(event);
+    },
+    updateEvent() {
+      let hoursFrom = this.timeFrom.split(":")[0];
+      let minutesFrom = this.timeFrom.split(":")[1];
+      let hoursTo = this.timeTo.split(":")[0];
+      let minutesTo = this.timeTo.split(":")[1];
+      let start = new Date(this.date).setHours(hoursFrom, minutesFrom);
+      let end = new Date(this.date).setHours(hoursTo, minutesTo);
+
+      this.checkOverlapping({
+        start,
+        end,
+        eventId: this.selectedEvent.id
+      }).then(isOverlapping => {
+        if (!isOverlapping) {
+          this.overlapping = false;
+          let event = this.selectedEvent;
+          event.start = start;
+          event.end = end;
+          this.updateSelectedEvent(event);
+        } else {
+          this.overlapping = true;
+        }
+      });
+
+      // console.log("isOverlapping:", isOverlapping());
     }
-  },
-  data() {
-    return {
-      notes: ""
-    };
   }
 };
 </script>
