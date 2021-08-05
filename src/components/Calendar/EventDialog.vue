@@ -31,11 +31,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <!-- Cancel Button -->
-      <v-btn
-        :color="selectedEvent.color"
-        class="white--text"
-        @click="$emit('setEventDetailsOpen', false)"
-      >
+      <v-btn :color="selectedEvent.color" class="white--text" @click="payNow">
         Pay Now To Book
       </v-btn>
     </v-card-actions>
@@ -44,8 +40,10 @@
 <script>
 import BookingForm from "./BookingForm.vue";
 import { mapState, mapActions } from "vuex";
+import apiClient from "../../api/client";
 export default {
   components: { BookingForm },
+
   computed: {
     ...mapState("events", ["selectedEvent"])
   },
@@ -54,6 +52,19 @@ export default {
     deleteEvents() {
       this.deleteEvent(this.selectedEvent);
       this.$emit("setEventDetailsOpen", false);
+    },
+    payNow() {
+      apiClient
+        .post("reservation", {
+          serviceId: 1,
+          dateFrom: this.selectedEvent.start,
+          dateTo: this.selectedEvent.end
+        })
+        .then(res => {
+          console.log("r:", res.data);
+          this.$emit("setEventDetailsOpen", false);
+        })
+        .catch(err => console.log("err:", err.response.data.error));
     }
   }
 };

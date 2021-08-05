@@ -77,7 +77,6 @@ export default {
   },
   data() {
     return {
-      notes: "",
       date: "",
       timeFrom: "",
       timeTo: "",
