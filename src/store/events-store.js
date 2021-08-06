@@ -1,9 +1,15 @@
 import clientApi from "../api/client";
 const state = {
   eventsArr: [],
-  selectedEvent: {}
+  selectedEvent: {},
+  iframeSrc:
+    "https://accept.paymob.com/api/acceptance/iframes/249719?payment_token=",
+  iFrameToken: null
 };
 const mutations = {
+  updateIframeToken(state, payload) {
+    state.iFrameToken = payload;
+  },
   updateSelectedEvent(state, payload) {
     state.selectedEvent = payload;
   },
@@ -28,7 +34,7 @@ const actions = {
       commit("updateEvents", events.data.data);
     });
   },
-  bookEvent({ dispatch }) {
+  bookEvent({ dispatch, commit }) {
     return new Promise((resolve, reject) => {
       clientApi
         .post("reservation", {
@@ -37,6 +43,7 @@ const actions = {
           end: state.selectedEvent.end
         })
         .then(res => {
+          commit("updateIframeToken", res.data.iFrameToken);
           console.log("r:", res.data);
 
           dispatch("getAllEvents");
@@ -75,6 +82,9 @@ const actions = {
   }
 };
 const getters = {
+  getIframeSrc: state => {
+    return state.iframeSrc + state.iFrameToken;
+  },
   getDate: state => {
     let eventDate = new Date(state.selectedEvent.start);
     eventDate =

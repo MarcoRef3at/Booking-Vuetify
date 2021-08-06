@@ -24,7 +24,30 @@
     <!-- Form Body -->
 
     <v-card-text>
-      <BookingForm />
+      <v-carousel v-model="carousel" :show-arrows="false" hide-delimiters>
+        <v-carousel-item>
+          <BookingForm />
+        </v-carousel-item>
+        <v-carousel-item>
+          <div>
+            <iframe
+              :src="getIframeSrc"
+              width="40%"
+              height="60%"
+              scrolling="yes"
+              frameborder="0"
+              style="
+            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: hidden;
+           
+            position: fixed;
+          
+          "
+            ></iframe>
+          </div>
+        </v-carousel-item>
+      </v-carousel>
     </v-card-text>
 
     <!-- Card Footer -->
@@ -39,13 +62,19 @@
 </template>
 <script>
 import BookingForm from "./BookingForm.vue";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 import apiClient from "../../api/client";
 export default {
   components: { BookingForm },
+  data() {
+    return {
+      carousel: 0
+    };
+  },
 
   computed: {
-    ...mapState("events", ["selectedEvent"])
+    ...mapState("events", ["selectedEvent"]),
+    ...mapGetters("events", ["getIframeSrc"])
   },
   methods: {
     ...mapActions("events", ["deleteEvent", "bookEvent"]),
@@ -55,7 +84,10 @@ export default {
     },
 
     payNow() {
-      this.bookEvent().then(() => this.$emit("setEventDetailsOpen", false));
+      this.bookEvent().then(() => {
+        this.carousel = 1;
+        // this.$emit("setEventDetailsOpen", false)
+      });
     }
   }
 };
