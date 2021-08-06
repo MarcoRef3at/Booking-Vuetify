@@ -93,16 +93,14 @@ export default {
     selectedOpen: false,
     value: "",
     // events: [],
-    colors: ["#2196F3", "#3F51B5", "#673AB7", "#00BCD4", "#4CAF50", "#FF9800"],
-    names: [
-      "Meeting",
-      "Holiday",
-      "PTO",
-      "Travel",
-      "Event",
-      "Birthday",
-      "Conference",
-      "Party"
+    colors: [
+      "#2196F3",
+      "#3F51B5",
+      "#673AB7",
+      "#00BCD4",
+      "#4CAF50",
+      "#FF9800",
+      "#2196F3"
     ],
     dragEvent: null,
     dragStart: null,
@@ -174,18 +172,14 @@ export default {
       return date.setMinutes(date.getMinutes() + this.defaultDuration);
     },
 
-    dateRangeOverlaps(a_start, a_end, b_start, b_end) {
-      if (a_start < b_start && b_start < a_end) return true; // b starts in a
-      if (a_start < b_end && b_end < a_end) return true; // b ends in a
-      if (b_start < a_start && a_end < b_end) return true; // a in b
-      return false;
-    },
-
     checkOverlapping(start, end, eventId) {
       const dateRangeOverlaps = (a_start, a_end, b_start, b_end) => {
         if (a_start < b_start && b_start < a_end) return true; // b starts in a
         if (a_start < b_end && b_end < a_end) return true; // b ends in a
         if (b_start < a_start && a_end < b_end) return true; // a in b
+        if (a_start == b_start && a_end >= b_end) return true; //a = b
+        if (b_start < a_start && a_end == b_end) return true;
+        if (a_start == b_start && b_end >= a_end) return true;
         return false;
       };
 
@@ -315,7 +309,12 @@ export default {
       return Math.floor((b - a + 5) * Math.random()) + a;
     },
     rndElement(arr) {
-      return arr[this.rnd(0, arr.length - 1)];
+      let x = arr[this.rnd(0, arr.length - 2)];
+      // Bypass Undefined color bug
+      if (x === undefined) {
+        return this.colors[0];
+      }
+      return x;
     },
     viewDay({ date }) {
       this.focus = date;
