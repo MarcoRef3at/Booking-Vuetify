@@ -22,7 +22,13 @@ const mutations = {
 };
 const actions = {
   getAllEvents({ commit }) {
-    clientApi.get("reservation").then(events => {
+    let body = {
+      StaffList: ["OZTPoHH8/0Cfc2B5Mm+9Pg==", "hmiVSgFlkUe/rjYjFAEs/g=="],
+      Start: "2021-08-10T00:00:00",
+      End: "2021-10-11T00:00:00",
+      TimeZone: "Africa/Cairo"
+    };
+    clientApi.post("test", body).then(events => {
       events.data.data.forEach(event => {
         event.start = new Date(event.start).getTime();
         event.end = new Date(event.end).getTime();
