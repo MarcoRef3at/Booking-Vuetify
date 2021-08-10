@@ -26,24 +26,43 @@ const actions = {
   getAllEvents({ commit }) {
     console.log("getall");
     let body = {
-      StaffList: ["OZTPoHH8/0Cfc2B5Mm+9Pg==", "hmiVSgFlkUe/rjYjFAEs/g=="],
-      Start: "2021-08-10T00:00:00",
-      End: "2021-10-11T00:00:00",
+      StaffList: ["hmiVSgFlkUe/rjYjFAEs/g=="],
+      Start: "2021-08-08T00:00:00",
+      End: "2021-08-15T00:00:00",
       TimeZone: "Africa/Cairo",
     };
 
-    corsBridge.post(endpoints.getStaffAvailability, body).then((events) => {
-      console.log("events:", events);
-      // events.data.data.forEach(event => {
-      //   event.start = new Date(event.start).getTime();
-      //   event.end = new Date(event.end).getTime();
-      //   event.name = "Blocked";
-      //   event.color = "#757575";
-      //   event.timed = true;
-      //   event.editable = false;
-      // });
-      // commit("updateEvents", events.data.data);
-    });
+    corsBridge
+      .post(endpoints.getStaffAvailability, body)
+      .then(async (events) => {
+        let availableDates =
+          events.data.StaffBookabilities[0].BookableTimeBlocks;
+
+        let blocked = [];
+        await Promise.all(
+          availableDates.map((available, index, elements) => {
+            if (index < elements.length - 1) {
+              let slot = {
+                start: available.End,
+                end: elements[index + 1].Start,
+              };
+
+              return blocked.push(slot);
+            }
+          })
+        );
+        console.log("blocked:", blocked);
+
+        blocked.forEach((event) => {
+          event.start = new Date(event.start).getTime();
+          event.end = new Date(event.end).getTime();
+          event.name = "Blocked";
+          event.color = "#757575";
+          event.timed = true;
+          event.editable = false;
+        });
+        commit("updateEvents", blocked);
+      });
   },
   bookEvent({ dispatch, commit }) {
     return new Promise((resolve, reject) => {
