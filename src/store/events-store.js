@@ -1,10 +1,12 @@
-import clientApi from "../api/client";
+import { corsBridge, paymobApi } from "../api/client";
+import endpoints from "../api/endpoints";
+import getPaymobIFrameToken from "../api/paymob_request";
 const state = {
   eventsArr: [],
   selectedEvent: {},
   iframeSrc:
     "https://accept.paymob.com/api/acceptance/iframes/249719?payment_token=",
-  iFrameToken: null
+  iFrameToken: null,
 };
 const mutations = {
   updateIframeToken(state, payload) {
@@ -17,45 +19,53 @@ const mutations = {
     state.eventsArr = payload;
   },
   deleteEvent(state, payload) {
-    state.eventsArr = state.eventsArr.filter(e => e.id != payload.id);
-  }
+    state.eventsArr = state.eventsArr.filter((e) => e.id != payload.id);
+  },
 };
 const actions = {
   getAllEvents({ commit }) {
+    console.log("getall");
     let body = {
       StaffList: ["OZTPoHH8/0Cfc2B5Mm+9Pg==", "hmiVSgFlkUe/rjYjFAEs/g=="],
       Start: "2021-08-10T00:00:00",
       End: "2021-10-11T00:00:00",
-      TimeZone: "Africa/Cairo"
+      TimeZone: "Africa/Cairo",
     };
-    clientApi.post("test", body).then(events => {
-      events.data.data.forEach(event => {
-        event.start = new Date(event.start).getTime();
-        event.end = new Date(event.end).getTime();
-        event.name = "Blocked";
-        event.color = "#757575";
-        event.timed = true;
-        event.editable = false;
-      });
-      commit("updateEvents", events.data.data);
+
+    corsBridge.post(endpoints.getStaffAvailability, body).then((events) => {
+      console.log("events:", events);
+      // events.data.data.forEach(event => {
+      //   event.start = new Date(event.start).getTime();
+      //   event.end = new Date(event.end).getTime();
+      //   event.name = "Blocked";
+      //   event.color = "#757575";
+      //   event.timed = true;
+      //   event.editable = false;
+      // });
+      // commit("updateEvents", events.data.data);
     });
   },
   bookEvent({ dispatch, commit }) {
     return new Promise((resolve, reject) => {
-      clientApi
-        .post("reservation", {
-          serviceId: 1,
-          start: state.selectedEvent.start,
-          end: state.selectedEvent.end
+      getPaymobIFrameToken(300)
+        .then((iframeToken) => {
+          commit("updateIframeToken", iframeToken);
+          resolve();
         })
-        .then(res => {
-          commit("updateIframeToken", res.data.iFrameToken);
-          console.log("r:", res.data);
+        // clientApi
+        //   .post("reservation", {
+        //     serviceId: 1,
+        //     start: state.selectedEvent.start,
+        //     end: state.selectedEvent.end,
+        //   })
+        //   .then((res) => {
+        //     commit("updateIframeToken", res.data.iFrameToken);
+        //     console.log("r:", res.data);
 
-          dispatch("getAllEvents");
-          resolve(res); //returns x in .then
-        })
-        .catch(err => {
+        //     dispatch("getAllEvents");
+        //     resolve(res); //returns x in .then
+        //   })
+        .catch((err) => {
           console.log("err:", err.response.data);
           reject(err); //returns y in .catch
         });
@@ -80,18 +90,18 @@ const actions = {
     };
 
     const { start, end, eventId } = payload;
-    let allOtherEvents = state.eventsArr.filter(event => event.id != eventId);
-    let allowed = allOtherEvents.map(event => {
+    let allOtherEvents = state.eventsArr.filter((event) => event.id != eventId);
+    let allowed = allOtherEvents.map((event) => {
       return dateRangeOverlaps(event.start, event.end, start, end);
     });
-    return allowed.some(value => value);
-  }
+    return allowed.some((value) => value);
+  },
 };
 const getters = {
-  getIframeSrc: state => {
+  getIframeSrc: (state) => {
     return state.iframeSrc + state.iFrameToken;
   },
-  getDate: state => {
+  getDate: (state) => {
     let eventDate = new Date(state.selectedEvent.start);
     eventDate =
       eventDate.getFullYear() +
@@ -101,18 +111,18 @@ const getters = {
       eventDate.getDate();
     return eventDate;
   },
-  getTimeFrom: state => {
+  getTimeFrom: (state) => {
     let date = new Date(state.selectedEvent.start);
     let hours = date.getHours();
     let minutes = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
     return `${hours}:${minutes}`;
   },
-  getTimeTo: state => {
+  getTimeTo: (state) => {
     let date = new Date(state.selectedEvent.end);
     let hours = date.getHours();
     let minutes = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
     return `${hours}:${minutes}`;
-  }
+  },
 };
 
 export default {
@@ -120,5 +130,5 @@ export default {
   state,
   mutations,
   actions,
-  getters
+  getters,
 };

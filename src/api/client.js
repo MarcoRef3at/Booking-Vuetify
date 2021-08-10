@@ -1,9 +1,15 @@
 import axios from "axios";
-const apiClient = axios.create({
-  baseURL: "http://192.168.1.99:5000/",
-  headers: {
-    "Content-Type": "application/json;charset=utf-8"
-  }
+import endpoints from "./endpoints";
+const headers = {
+  "Content-Type": "application/json;charset=utf-8",
+};
+
+export const corsBridge = axios.create({
+  baseURL: endpoints.CORS_BRIDGE,
+  headers,
 });
 
-export default apiClient;
+export const paymobApi = axios.create({
+  baseURL: endpoints.PAYMOB_API,
+  headers,
+});
