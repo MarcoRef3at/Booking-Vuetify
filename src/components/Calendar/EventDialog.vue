@@ -51,7 +51,7 @@
     </v-card-text>
 
     <!-- Card Footer -->
-    <v-card-actions>
+    <v-card-actions v-if="carousel == 0">
       <v-spacer></v-spacer>
       <!-- Cancel Button -->
       <v-btn :color="selectedEvent.color" class="white--text" @click="payNow">
@@ -68,13 +68,13 @@ export default {
   components: { BookingForm },
   data() {
     return {
-      carousel: 0
+      carousel: 0,
     };
   },
 
   computed: {
     ...mapState("events", ["selectedEvent"]),
-    ...mapGetters("events", ["getIframeSrc"])
+    ...mapGetters("events", ["getIframeSrc"]),
   },
   methods: {
     ...mapActions("events", ["deleteEvent", "bookEvent"]),
@@ -88,7 +88,7 @@ export default {
         this.carousel = 1;
         // this.$emit("setEventDetailsOpen", false)
       });
-    }
-  }
+    },
+  },
 };
 </script>
