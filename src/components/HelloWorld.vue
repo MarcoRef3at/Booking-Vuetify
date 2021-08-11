@@ -52,6 +52,13 @@
             >
               <v-icon @click="deleteEvent(event)">mdi-delete</v-icon>
             </v-btn>
+            <v-btn
+              v-if="event.editable"
+              icon
+              @click="timeFormater(event.start)"
+            >
+              <v-icon @click="rout()">mdi-delete</v-icon>
+            </v-btn>
 
             <!-- Drag down to extend event time -->
             <div
@@ -100,14 +107,14 @@ export default {
       "#00BCD4",
       "#4CAF50",
       "#FF9800",
-      "#2196F3",
+      "#2196F3"
     ],
     dragEvent: null,
     dragStart: null,
     createEvent: null,
     createStart: null,
     extendOriginal: null,
-    defaultDuration: 60, //minutes
+    defaultDuration: 60 //minutes
   }),
   mounted() {
     this.$refs.calendar.checkChange();
@@ -122,17 +129,20 @@ export default {
       },
       set(value) {
         this.updateEvents(value);
-      },
-    },
+      }
+    }
   },
   methods: {
     ...mapActions("events", [
       "updateSelectedEvent",
       "updateEvents",
       "deleteEvent",
-      "getAllEvents",
+      "getAllEvents"
     ]),
 
+    rout() {
+      console.log(this.$router);
+    },
     setEventDetailsOpen(value) {
       this.selectedOpen = value;
     },
@@ -183,13 +193,11 @@ export default {
         return false;
       };
 
-      let allOtherEvents = this.eventsArr.filter(
-        (event) => event.id != eventId
-      );
-      let allowed = allOtherEvents.map((event) => {
+      let allOtherEvents = this.eventsArr.filter(event => event.id != eventId);
+      let allowed = allOtherEvents.map(event => {
         return dateRangeOverlaps(event.start, event.end, start, end);
       });
-      return allowed.some((value) => value);
+      return allowed.some(value => value);
     },
 
     startTime(tms) {
@@ -209,7 +217,7 @@ export default {
           start: this.createStart,
           end: this.addDefaultDuration(this.createStart),
           timed: true,
-          editable: true,
+          editable: true
         };
 
         this.events.push(this.createEvent);
@@ -352,8 +360,8 @@ export default {
 
         nativeEvent.stopPropagation();
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
