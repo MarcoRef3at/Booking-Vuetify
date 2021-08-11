@@ -87,8 +87,8 @@
   </v-row>
 </template>
 <script>
-import EventDialog from "./Calendar/EventDialog.vue";
-import CalendarHeader from "./Calendar/CalendarHeader.vue";
+import EventDialog from "./EventDialog.vue";
+import CalendarHeader from "./CalendarHeader.vue";
 import { mapState, mapActions } from "vuex";
 
 export default {
