@@ -33,7 +33,7 @@
           @touchmove:time="mouseMove"
           @touchend:time="endDrag"
           :start="new Date()"
-          :first-interval="15"
+          :first-interval="16"
           :interval-minutes="60"
           :interval-count="8"
         >

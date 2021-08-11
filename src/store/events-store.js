@@ -1,12 +1,15 @@
 import { corsBridge, paymobApi } from "../api/client";
 import endpoints from "../api/endpoints";
 import getPaymobIFrameToken from "../api/paymob_request";
+import { dateRangeOverlaps } from "./../functions/index";
 const state = {
   eventsArr: [],
   selectedEvent: {},
   iframeSrc:
     "https://accept.paymob.com/api/acceptance/iframes/249719?payment_token=",
   iFrameToken: null,
+  Start_Time: "16",
+  End_Time: "0"
 };
 const mutations = {
   updateIframeToken(state, payload) {
@@ -19,8 +22,8 @@ const mutations = {
     state.eventsArr = payload;
   },
   deleteEvent(state, payload) {
-    state.eventsArr = state.eventsArr.filter((e) => e.id != payload.id);
-  },
+    state.eventsArr = state.eventsArr.filter(e => e.id != payload.id);
+  }
 };
 const actions = {
   getAllEvents({ commit }) {
@@ -29,45 +32,56 @@ const actions = {
       StaffList: ["hmiVSgFlkUe/rjYjFAEs/g=="],
       Start: "2021-08-08T00:00:00",
       End: "2021-08-15T00:00:00",
-      TimeZone: "Africa/Cairo",
+      TimeZone: "Africa/Cairo"
     };
 
-    corsBridge
-      .post(endpoints.getStaffAvailability, body)
-      .then(async (events) => {
-        let availableDates =
-          events.data.StaffBookabilities[0].BookableTimeBlocks;
+    corsBridge.post(endpoints.getStaffAvailability, body).then(async events => {
+      let availableDates = events.data.StaffBookabilities[0].BookableTimeBlocks;
 
-        let blocked = [];
-        await Promise.all(
-          availableDates.map((available, index, elements) => {
-            if (index < elements.length - 1) {
-              let slot = {
-                start: available.End,
-                end: elements[index + 1].Start,
-              };
+      let blocked = [];
+      await Promise.all(
+        // Filter Available Dates and convert the unavailable slots to events
+        availableDates.map((available, index, elements) => {
+          if (index < elements.length - 1) {
+            let slot = {
+              start: available.End,
+              end: elements[index + 1].Start
+            };
 
+            if (
+              new Date(slot.start).getTime() ===
+                new Date(
+                  new Date(slot.start).setHours(state.End_Time)
+                ).getTime() &&
+              new Date(slot.end).getTime() ===
+                new Date(
+                  new Date(slot.start).setHours(state.Start_Time)
+                ).getTime()
+            ) {
+              // If events in non-working hours .. neglect
+            } else {
               return blocked.push(slot);
             }
-          })
-        );
-        console.log("blocked:", blocked);
+          }
+        })
+      );
+      console.log("blocked:", blocked);
 
-        blocked.forEach((event) => {
-          event.start = new Date(event.start).getTime();
-          event.end = new Date(event.end).getTime();
-          event.name = "Blocked";
-          event.color = "#757575";
-          event.timed = true;
-          event.editable = false;
-        });
-        commit("updateEvents", blocked);
+      blocked.forEach(event => {
+        event.start = new Date(event.start).getTime();
+        event.end = new Date(event.end).getTime();
+        event.name = "Blocked";
+        event.color = "#757575";
+        event.timed = true;
+        event.editable = false;
       });
+      commit("updateEvents", blocked);
+    });
   },
   bookEvent({ dispatch, commit }) {
     return new Promise((resolve, reject) => {
       getPaymobIFrameToken(300)
-        .then((iframeToken) => {
+        .then(iframeToken => {
           commit("updateIframeToken", iframeToken);
           resolve();
         })
@@ -84,7 +98,7 @@ const actions = {
         //     dispatch("getAllEvents");
         //     resolve(res); //returns x in .then
         //   })
-        .catch((err) => {
+        .catch(err => {
           console.log("err:", err.response.data);
           reject(err); //returns y in .catch
         });
@@ -109,18 +123,18 @@ const actions = {
     };
 
     const { start, end, eventId } = payload;
-    let allOtherEvents = state.eventsArr.filter((event) => event.id != eventId);
-    let allowed = allOtherEvents.map((event) => {
+    let allOtherEvents = state.eventsArr.filter(event => event.id != eventId);
+    let allowed = allOtherEvents.map(event => {
       return dateRangeOverlaps(event.start, event.end, start, end);
     });
-    return allowed.some((value) => value);
-  },
+    return allowed.some(value => value);
+  }
 };
 const getters = {
-  getIframeSrc: (state) => {
+  getIframeSrc: state => {
     return state.iframeSrc + state.iFrameToken;
   },
-  getDate: (state) => {
+  getDate: state => {
     let eventDate = new Date(state.selectedEvent.start);
     eventDate =
       eventDate.getFullYear() +
@@ -130,18 +144,18 @@ const getters = {
       eventDate.getDate();
     return eventDate;
   },
-  getTimeFrom: (state) => {
+  getTimeFrom: state => {
     let date = new Date(state.selectedEvent.start);
     let hours = date.getHours();
     let minutes = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
     return `${hours}:${minutes}`;
   },
-  getTimeTo: (state) => {
+  getTimeTo: state => {
     let date = new Date(state.selectedEvent.end);
     let hours = date.getHours();
     let minutes = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
     return `${hours}:${minutes}`;
-  },
+  }
 };
 
 export default {
@@ -149,5 +163,5 @@ export default {
   state,
   mutations,
   actions,
-  getters,
+  getters
 };
