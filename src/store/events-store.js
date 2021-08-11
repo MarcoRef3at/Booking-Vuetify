@@ -26,17 +26,29 @@ const mutations = {
   }
 };
 const actions = {
-  getAllEvents({ commit }) {
-    console.log("getall");
+  getAllEvents({ commit }, start, end) {
     let body = {
       StaffList: ["hmiVSgFlkUe/rjYjFAEs/g=="],
       Start: "2021-08-08T00:00:00",
       End: "2021-08-15T00:00:00",
       TimeZone: "Africa/Cairo"
     };
-
     corsBridge.post(endpoints.getStaffAvailability, body).then(async events => {
       let availableDates = events.data.StaffBookabilities[0].BookableTimeBlocks;
+      let startDate = new Date(start);
+      // console.log("startDate:", new Date(startDate).getTime());
+      // console.log("startDate < Date.now():", startDate < Date.now());
+      console.log("startDate:", new Date(startDate));
+      console.log(
+        "startDate.setDate(startDate.getDay() + 1):",
+        new Date(startDate.setDate(startDate.getDate() + 1))
+      );
+
+      for (
+        new Date(startDate).getTime();
+        startDate < Date.now();
+        new Date(startDate.setDate(startDate.getDate() + 1))
+      ) {}
 
       let blocked = [];
       await Promise.all(
@@ -65,7 +77,6 @@ const actions = {
           }
         })
       );
-      console.log("blocked:", blocked);
 
       blocked.forEach(event => {
         event.start = new Date(event.start).getTime();

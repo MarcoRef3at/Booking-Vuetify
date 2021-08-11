@@ -303,7 +303,7 @@ export default {
         : event.color;
     },
     getEvents({ start, end }) {
-      this.getAllEvents();
+      this.getAllEvents(start.date, end.date);
     },
     rnd(a, b) {
       return Math.floor((b - a + 5) * Math.random()) + a;
