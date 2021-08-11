@@ -9,7 +9,7 @@ const state = {
     "https://accept.paymob.com/api/acceptance/iframes/249719?payment_token=",
   iFrameToken: null,
   Start_Time: "16",
-  End_Time: "0"
+  End_Time: "0",
 };
 const mutations = {
   updateIframeToken(state, payload) {
@@ -22,77 +22,106 @@ const mutations = {
     state.eventsArr = payload;
   },
   deleteEvent(state, payload) {
-    state.eventsArr = state.eventsArr.filter(e => e.id != payload.id);
-  }
+    state.eventsArr = state.eventsArr.filter((e) => e.id != payload.id);
+  },
 };
 const actions = {
-  getAllEvents({ commit }, start, end) {
+  getAllEvents({ commit }, payload) {
+    let { start, end } = payload;
+    let startDate = new Date(start);
+    let endDate = new Date(new Date(end).setHours(23, 59));
+    const formatDate = (date) => {
+      let year = JSON.stringify(new Date(date).getFullYear());
+
+      let month = new Date(date).getMonth() + 1;
+      if (month < 10) {
+        month = `0${month}`;
+      }
+      let day = new Date(date).getDate();
+      if (day < 10) {
+        day = `0${day}`;
+      }
+      return `${year}-${month}-${day}T00:00:00`;
+    };
+
     let body = {
       StaffList: ["hmiVSgFlkUe/rjYjFAEs/g=="],
-      Start: "2021-08-08T00:00:00",
-      End: "2021-08-15T00:00:00",
-      TimeZone: "Africa/Cairo"
+      Start: formatDate(startDate),
+      End: formatDate(endDate),
+      TimeZone: "Africa/Cairo",
     };
-    corsBridge.post(endpoints.getStaffAvailability, body).then(async events => {
-      let availableDates = events.data.StaffBookabilities[0].BookableTimeBlocks;
-      let startDate = new Date(start);
-      // console.log("startDate:", new Date(startDate).getTime());
-      // console.log("startDate < Date.now():", startDate < Date.now());
-      console.log("startDate:", new Date(startDate));
-      console.log(
-        "startDate.setDate(startDate.getDay() + 1):",
-        new Date(startDate.setDate(startDate.getDate() + 1))
-      );
+    corsBridge
+      .post(endpoints.getStaffAvailability, body)
+      .then(async (events) => {
+        let availableDates =
+          events.data.StaffBookabilities[0].BookableTimeBlocks;
 
-      for (
-        new Date(startDate).getTime();
-        startDate < Date.now();
-        new Date(startDate.setDate(startDate.getDate() + 1))
-      ) {}
+        let blocked = [];
+        // console.log("startDate:", new Date(startDate).getTime());
+        // console.log("startDate < Date.now():", startDate < Date.now());
+        // console.log("startDate:", new Date(startDate));
+        // console.log(
+        //   "startDate.setDate(startDate.getDay() + 1):",
+        //   new Date(startDate.setDate(startDate.getDate() + 1))
+        // );
 
-      let blocked = [];
-      await Promise.all(
-        // Filter Available Dates and convert the unavailable slots to events
-        availableDates.map((available, index, elements) => {
-          if (index < elements.length - 1) {
-            let slot = {
-              start: available.End,
-              end: elements[index + 1].Start
-            };
+        // Block Previous Days
 
-            if (
-              new Date(slot.start).getTime() ===
-                new Date(
-                  new Date(slot.start).setHours(state.End_Time)
-                ).getTime() &&
-              new Date(slot.end).getTime() ===
-                new Date(
-                  new Date(slot.start).setHours(state.Start_Time)
-                ).getTime()
-            ) {
-              // If events in non-working hours .. neglect
-            } else {
-              return blocked.push(slot);
+        // for (
+        //   new Date(startDate).getTime();
+        //   startDate < Date.now();
+        //   new Date(startDate.setDate(startDate.getDate() + 1))
+        // ) {
+        //   let slot = {
+        //     start: new Date(startDate),
+        //     end: new Date(endDate.setDate(endDate.getDate())),
+        //   };
+        //   console.log("slot:", slot);
+        //   blocked.push(slot);
+        // }
+
+        await Promise.all(
+          // Filter Available Dates and convert the unavailable slots to events
+          availableDates.map((available, index, elements) => {
+            if (index < elements.length - 1) {
+              let slot = {
+                start: available.End,
+                end: elements[index + 1].Start,
+              };
+
+              if (
+                new Date(slot.start).getTime() ===
+                  new Date(
+                    new Date(slot.start).setHours(state.End_Time)
+                  ).getTime() &&
+                new Date(slot.end).getTime() ===
+                  new Date(
+                    new Date(slot.start).setHours(state.Start_Time)
+                  ).getTime()
+              ) {
+                // If events in non-working hours .. neglect
+              } else {
+                return blocked.push(slot);
+              }
             }
-          }
-        })
-      );
+          })
+        );
 
-      blocked.forEach(event => {
-        event.start = new Date(event.start).getTime();
-        event.end = new Date(event.end).getTime();
-        event.name = "Blocked";
-        event.color = "#757575";
-        event.timed = true;
-        event.editable = false;
+        blocked.forEach((event) => {
+          event.start = new Date(event.start).getTime();
+          event.end = new Date(event.end).getTime();
+          event.name = "Blocked";
+          event.color = "#757575";
+          event.timed = true;
+          event.editable = false;
+        });
+        commit("updateEvents", blocked);
       });
-      commit("updateEvents", blocked);
-    });
   },
   bookEvent({ dispatch, commit }) {
     return new Promise((resolve, reject) => {
       getPaymobIFrameToken(300)
-        .then(iframeToken => {
+        .then((iframeToken) => {
           commit("updateIframeToken", iframeToken);
           resolve();
         })
@@ -109,7 +138,7 @@ const actions = {
         //     dispatch("getAllEvents");
         //     resolve(res); //returns x in .then
         //   })
-        .catch(err => {
+        .catch((err) => {
           console.log("err:", err.response.data);
           reject(err); //returns y in .catch
         });
@@ -134,18 +163,18 @@ const actions = {
     };
 
     const { start, end, eventId } = payload;
-    let allOtherEvents = state.eventsArr.filter(event => event.id != eventId);
-    let allowed = allOtherEvents.map(event => {
+    let allOtherEvents = state.eventsArr.filter((event) => event.id != eventId);
+    let allowed = allOtherEvents.map((event) => {
       return dateRangeOverlaps(event.start, event.end, start, end);
     });
-    return allowed.some(value => value);
-  }
+    return allowed.some((value) => value);
+  },
 };
 const getters = {
-  getIframeSrc: state => {
+  getIframeSrc: (state) => {
     return state.iframeSrc + state.iFrameToken;
   },
-  getDate: state => {
+  getDate: (state) => {
     let eventDate = new Date(state.selectedEvent.start);
     eventDate =
       eventDate.getFullYear() +
@@ -155,18 +184,18 @@ const getters = {
       eventDate.getDate();
     return eventDate;
   },
-  getTimeFrom: state => {
+  getTimeFrom: (state) => {
     let date = new Date(state.selectedEvent.start);
     let hours = date.getHours();
     let minutes = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
     return `${hours}:${minutes}`;
   },
-  getTimeTo: state => {
+  getTimeTo: (state) => {
     let date = new Date(state.selectedEvent.end);
     let hours = date.getHours();
     let minutes = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
     return `${hours}:${minutes}`;
-  }
+  },
 };
 
 export default {
@@ -174,5 +203,5 @@ export default {
   state,
   mutations,
   actions,
-  getters
+  getters,
 };
