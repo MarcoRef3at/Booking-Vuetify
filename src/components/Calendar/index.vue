@@ -52,13 +52,6 @@
             >
               <v-icon @click="deleteEvent(event)">mdi-delete</v-icon>
             </v-btn>
-            <v-btn
-              v-if="event.editable"
-              icon
-              @click="timeFormater(event.start)"
-            >
-              <v-icon @click="rout()">mdi-delete</v-icon>
-            </v-btn>
 
             <!-- Drag down to extend event time -->
             <div
@@ -118,6 +111,7 @@ export default {
   }),
   mounted() {
     this.$refs.calendar.checkChange();
+    console.log(this.$route.query);
   },
 
   computed: {
@@ -140,9 +134,6 @@ export default {
       "getAllEvents"
     ]),
 
-    rout() {
-      console.log(this.$router);
-    },
     setEventDetailsOpen(value) {
       this.selectedOpen = value;
     },
