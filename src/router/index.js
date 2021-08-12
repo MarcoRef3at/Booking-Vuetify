@@ -20,6 +20,15 @@ const routes = [
     }
   },
   {
+    path: "/payment",
+    name: "Payment",
+    component: function() {
+      return import(
+        /* webpackChunkName: "about" */ "../views/PaymentIFrame.vue"
+      );
+    }
+  },
+  {
     path: "/success",
     name: "SuccessPayment",
     component: function() {

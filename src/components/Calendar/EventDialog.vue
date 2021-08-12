@@ -28,7 +28,7 @@
         <v-carousel-item>
           <BookingForm />
         </v-carousel-item>
-        <v-carousel-item>
+        <!-- <v-carousel-item>
           <div>
             <iframe
               :src="getIframeSrc"
@@ -46,7 +46,7 @@
           "
             ></iframe>
           </div>
-        </v-carousel-item>
+        </v-carousel-item> -->
       </v-carousel>
     </v-card-text>
 
@@ -68,13 +68,13 @@ export default {
   components: { BookingForm },
   data() {
     return {
-      carousel: 0,
+      carousel: 0
     };
   },
 
   computed: {
     ...mapState("events", ["selectedEvent"]),
-    ...mapGetters("events", ["getIframeSrc"]),
+    ...mapGetters("events", ["getIframeSrc"])
   },
   methods: {
     ...mapActions("events", ["deleteEvent", "bookEvent"]),
@@ -85,10 +85,10 @@ export default {
 
     payNow() {
       this.bookEvent().then(() => {
-        this.carousel = 1;
+        this.$router.push("payment");
         // this.$emit("setEventDetailsOpen", false)
       });
-    },
-  },
+    }
+  }
 };
 </script>

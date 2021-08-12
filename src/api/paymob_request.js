@@ -12,7 +12,7 @@ const Order_Regestiration = (AUTH_TOKEN, EGP) => {
     auth_token: AUTH_TOKEN,
     delivery_needed: "false",
     amount_cents: EGP,
-    currency: "EGP",
+    currency: "EGP"
   };
   return paymob.post(endpoints.ORDER_REGESTIRATION, body);
 };
@@ -23,6 +23,20 @@ const Card_Payment_Key = (AUTH_TOKEN, EGP, ID) => {
     amount_cents: EGP * 100,
     expiration: 3600,
     order_id: ID,
+    items: [
+      {
+        name: "Court 1",
+        amount_cents: "300000",
+        description: "Court 1",
+        quantity: "1"
+      },
+      {
+        name: "ERT6565",
+        amount_cents: "200000",
+        description: "Power Bank",
+        quantity: "1"
+      }
+    ],
     billing_data: {
       apartment: "803",
       email: "claudette09@exa.com",
@@ -36,16 +50,16 @@ const Card_Payment_Key = (AUTH_TOKEN, EGP, ID) => {
       city: "Jaskolskiburgh",
       country: "CR",
       last_name: "Nicolas",
-      state: "Utah",
+      state: "Utah"
     },
     currency: "EGP",
     integration_id: config.Integration_ID,
-    lock_order_when_paid: "false",
+    lock_order_when_paid: "false"
   };
   return paymob.post(endpoints.CARD_PAYMENT_KEY, body);
 };
 
-const getPaymobIFrameToken = async (EGP) => {
+const getPaymobIFrameToken = async EGP => {
   let AUTH_API_RES = await auth_api();
   let ORDER_REG_RES = await Order_Regestiration(AUTH_API_RES.data.token, EGP);
   console.log("Order ID", ORDER_REG_RES.data.id);
