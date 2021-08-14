@@ -42,16 +42,16 @@
               {{ timeFormater(event.start) }} - {{ timeFormater(event.end) }}
             </div>
 
-            <!-- Remove Icon Button -->
+            <!-- Remove Icon Button
             <v-btn
               v-if="event.editable"
               icon
               color="pink"
-              @click="timeFormater(event.start)"
+              @click="deleteEvent(event)"
               style="position: absolute; right: 0px;"
             >
-              <v-icon @click="deleteEvent(event)">mdi-delete</v-icon>
-            </v-btn>
+              <v-icon>mdi-delete</v-icon>
+            </v-btn> -->
 
             <!-- Drag down to extend event time -->
             <div
@@ -334,6 +334,7 @@ export default {
       this.$refs.calendar.next();
     },
     showEvent({ nativeEvent, event }) {
+      console.log("event:", event);
       if (event.editable) {
         const open = () => {
           this.updateSelectedEvent(event);
