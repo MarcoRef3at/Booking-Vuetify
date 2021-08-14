@@ -2,6 +2,7 @@
   <div>
     <v-container>
       <v-row>
+        <!-- Overlap Warning -->
         <v-alert
           color="red"
           width="100%"
@@ -10,6 +11,7 @@
           v-if="overlapping"
           >Selected Time Overlaps another reservation</v-alert
         >
+
         <!-- Date Picker -->
         <v-col cols="12">
           <DatePicker :parentDate="date" @setDate="setDate" />
@@ -63,7 +65,6 @@
         </v-col>
       </v-row>
     </v-container>
-    <small>*indicates required field</small>
   </div>
 </template>
 <script>
@@ -98,10 +99,30 @@ export default {
     setDate(date) {
       this.date = date;
     },
-    setTimeFrom(timeFrom) {
-      let hours = timeFrom.split(":")[0];
-      let minutes = timeFrom.split(":")[1];
-      this.timeFrom = timeFrom;
+    setTimeFrom(time_From) {
+      // Convert Time to timestamp to get difference between new one and old one
+      let hoursOld = this.timeFrom.split(":")[0];
+      let minutesOld = this.timeFrom.split(":")[1];
+      let timeFromOld = new Date(this.date).setHours(hoursOld, minutesOld);
+
+      let hoursNew = time_From.split(":")[0];
+      let minutesNew = time_From.split(":")[1];
+      let timeFromNew = new Date(this.date).setHours(hoursNew, minutesNew);
+
+      let timeDifference = timeFromNew - timeFromOld;
+
+      this.timeFrom = time_From;
+
+      // Add Difference to timeTo
+      let hoursToOld = this.timeTo.split(":")[0];
+      let minutesToOld = this.timeTo.split(":")[1];
+      let timeToOld = new Date(this.date).setHours(hoursToOld, minutesToOld);
+
+      let timeToNew = timeToOld + timeDifference;
+      let hours = new Date(timeToNew).getHours();
+      let minutes = new Date(timeToNew).getMinutes();
+
+      this.setTimeTo(`${hours}:${minutes < 10 ? `0` + minutes : minutes}`);
 
       // let eventStart = new Date(this.selectedEvent.start);
       // eventStart.setHours(hours, minutes);
@@ -110,6 +131,7 @@ export default {
       // this.updateSelectedEvent(event);
     },
     setTimeTo(timeTo) {
+      console.log("timeTo:", timeTo);
       let hours = timeTo.split(":")[0];
       let minutes = timeTo.split(":")[1];
       this.timeTo = timeTo;
@@ -122,6 +144,7 @@ export default {
       // this.updateSelectedEvent(event);
     },
     updateEvent() {
+      // Format Hours and Minutes in Comonent's Data
       let hoursFrom = this.timeFrom.split(":")[0];
       let minutesFrom = this.timeFrom.split(":")[1];
       let hoursTo = this.timeTo.split(":")[0];
@@ -129,6 +152,7 @@ export default {
       let start = new Date(this.date).setHours(hoursFrom, minutesFrom);
       let end = new Date(this.date).setHours(hoursTo, minutesTo);
 
+      // Check Overlapping with Events in the store
       this.checkOverlapping({
         start,
         end,
