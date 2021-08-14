@@ -9,7 +9,7 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <v-text-field
-          v-model="time"
+          v-model="timeText"
           :label="title"
           prepend-icon="mdi-clock-time-four-outline"
           readonly
@@ -40,6 +40,16 @@ export default {
       },
       set(timeToSet) {
         this.$emit("setTime", timeToSet);
+      }
+    },
+    timeText: {
+      get() {
+        let hours = this.parentTime.split(":")[0];
+        let minutes = this.parentTime.split(":")[1];
+        let time = `${hours > 12 ? hours - 12 : hours}:${minutes} ${
+          hours > 12 ? "PM" : "AM"
+        }`;
+        return time;
       }
     }
   },
