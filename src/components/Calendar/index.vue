@@ -307,7 +307,11 @@ export default {
         : event.color;
     },
     getEvents({ start, end }) {
-      this.getAllEvents({ start: start.date, end: end.date });
+      this.getAllEvents({
+        start: start.date,
+        end: end.date,
+        court: "court" in this.$route.query ? this.$route.query.court : null
+      });
     },
     rnd(a, b) {
       return Math.floor((b - a + 5) * Math.random()) + a;

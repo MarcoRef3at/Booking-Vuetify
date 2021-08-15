@@ -1,4 +1,5 @@
 import { corsBridge, paymobApi } from "../api/client";
+import config from "../api/config";
 import endpoints from "../api/endpoints";
 import getPaymobIFrameToken from "../api/paymob_request";
 import { dateRangeOverlaps } from "./../functions/index";
@@ -27,7 +28,7 @@ const mutations = {
 };
 const actions = {
   getAllEvents({ commit }, payload) {
-    let { start, end } = payload;
+    let { start, end, court } = payload;
     let startDate = new Date(start);
     let endDate = new Date(new Date(end).setHours(23, 59));
     const formatDate = date => {
@@ -43,16 +44,22 @@ const actions = {
       }
       return `${year}-${month}-${day}T00:00:00`;
     };
+    let courtId =
+      court == "WPT Court"
+        ? [config.WPT_STAFF_ID]
+        : court == "Panoramic Court"
+        ? [config.PANORAMIC_STAFF_ID]
+        : [config.WPT_STAFF_ID, config.PANORAMIC_STAFF_ID];
 
     let body = {
-      StaffList: ["hmiVSgFlkUe/rjYjFAEs/g=="],
+      StaffList: courtId,
       Start: formatDate(startDate),
       End: formatDate(endDate),
       TimeZone: "Africa/Cairo"
     };
     corsBridge.post(endpoints.getStaffAvailability, body).then(async events => {
       let availableDates = events.data.StaffBookabilities[0].BookableTimeBlocks;
-
+      // console.log("events.data.StaffBookabilities:", events.data);
       let blocked = [];
       // console.log("startDate:", new Date(startDate).getTime());
       // console.log("startDate < Date.now():", startDate < Date.now());
