@@ -1,20 +1,26 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import Test from "../views/Test.vue";
+import CalendarView from "../views/CalendarView.vue";
+import HomeBootstrap from "../views/HomeBootstrap.vue";
+import CourtsBootstrap from "../views/CourtsBootstrap.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home
+    name: "HomeBootstrap",
+    component: HomeBootstrap
   },
   {
-    path: "/test",
-    name: "Test",
-    component: Test
+    path: "/calendar",
+    name: "CalendarView",
+    component: CalendarView
+  },
+  {
+    path: "/courts",
+    name: "Courts",
+    component: CourtsBootstrap
   },
   {
     path: "/paymentStatus",

@@ -1,50 +1,23 @@
 <template>
   <div class="hello">
- <!-- ======= Header ======= -->
-    <header id="header" class="fixed-top header-transparent">
-      <div class="container d-flex align-items-center justify-content-between">
-        <div>
-            <!-- <a href="index.html"><img class="logo-image" src="./assets/img/padel-logo.png"
-          /></a> -->
-          <!-- Uncomment below if you prefer to use an image logo -->
-          <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-        </div>
-
-        <nav id="navbar" class="navbar">
-          <ul>
-           
-              <a class="nav-link scrollto" href="/inner-page.html"><h4>Book Now</h4></a>
-            </li>
-            
-          </ul>
-          <i class="bi bi-list mobile-nav-toggle"></i>
-        </nav>
-        <!-- .navbar -->
-      </div>
-    </header>
-    <!-- End Header -->
-
-   <!-- ======= Hero Section ======= -->
+    <!-- ======= Hero Section ======= -->
     <section id="hero">
-      <div class="hero-container" >
+      <div class="hero-container">
         <h1>Padel like never before!</h1>
         <h2>Book your padel court instantly</h2>
         <section id="cta" class="booknow">
-          <a class="cta-btn" href="/inner-page.html">Book Now</a>
+          <a class="cta-btn" href="/courts">Book Now</a>
         </section>
       </div>
     </section>
     <!-- End Hero -->
 
-     <main id="main">
+    <main id="main">
       <!-- ======= About Section ======= -->
       <section id="about" class="about">
         <div class="container">
           <div class="row no-gutters">
-            <div
-              class="content col-xl-5 d-flex align-items-stretch"
-              
-            >
+            <div class="content col-xl-5 d-flex align-items-stretch">
               <div class="content">
                 <h3>Welcome to EL GOUNA PADEL ASSOCIATION</h3>
                 <p>
@@ -53,7 +26,7 @@
                   welcomes new facilities and investors to come to El Gouna and
                   to be part of the success of padel in Egypt.
                 </p>
-                <a href="/inner-page.html" class="about-btn"
+                <a href="/courts" class="about-btn"
                   >Book Now <i class="bx bx-chevron-right"></i
                 ></a>
               </div>
@@ -61,26 +34,20 @@
             <div class="col-xl-7 d-flex align-items-stretch">
               <div class="icon-boxes d-flex flex-column justify-content-center">
                 <div class="row">
-                  <div
-                    class="col-md-6 icon-box"
-                    
-                    data-aos-delay="100"
-                  >
+                  <div class="col-md-6 icon-box" data-aos-delay="100">
                     <i class="bx bx-receipt"></i>
                     <h4>We Are Always Available</h4>
                     <p>
-                      Our courts are available for booking everyday from 4pm to 12am
+                      Our courts are available for booking everyday from 4pm to
+                      12am
                     </p>
                   </div>
-                  <div
-                    class="col-md-6 icon-box"
-                    
-                    data-aos-delay="200"
-                  >
+                  <div class="col-md-6 icon-box" data-aos-delay="200">
                     <i class="bx bx-cube-alt"></i>
                     <h4>Bring your friends</h4>
                     <p>
-                      Our courts have stands for your family and friend to have a seat watching the game.
+                      Our courts have stands for your family and friend to have
+                      a seat watching the game.
                     </p>
                   </div>
                   <!-- <div
@@ -119,7 +86,7 @@
       <!-- ======= Services Section ======= -->
       <section id="services" class="services">
         <div class="container">
-          <div class="section-title"  data-aos-delay="100">
+          <div class="section-title" data-aos-delay="100">
             <h2>All that you need to know about padel in El Gouna</h2>
           </div>
         </div>
@@ -128,11 +95,11 @@
 
       <!-- ======= Cta Section ======= -->
       <section id="cta" class="cta">
-        <div class="container" >
+        <div class="container">
           <div class="text-center">
             <h3>Reserve Your Court</h3>
 
-            <a class="cta-btn" href="/inner-page.html">Book Now</a>
+            <a class="cta-btn" href="/courts">Book Now</a>
           </div>
         </div>
       </section>
@@ -141,14 +108,18 @@
       <!-- ======= Portfolio Section ======= -->
       <section id="portfolio" class="portfolio">
         <div class="container">
-          <div class="section-title"  data-aos-delay="100">
+          <div class="section-title" data-aos-delay="100">
             <h2>Events</h2>
             <p>
-              One of the most exciting events took place from the 11th till the 13th of March as El Gouna collaborated with I-Events, El Gouna Padel & PadelPod Egypt for an outstanding tournament. It was the first ever to be held at El Gouna & we cannot wait for the next Tournament.
+              One of the most exciting events took place from the 11th till the
+              13th of March as El Gouna collaborated with I-Events, El Gouna
+              Padel & PadelPod Egypt for an outstanding tournament. It was the
+              first ever to be held at El Gouna & we cannot wait for the next
+              Tournament.
             </p>
           </div>
 
-          <div class="row" >
+          <div class="row">
             <div class="col-lg-12 d-flex justify-content-center">
               <ul id="portfolio-flters">
                 <li data-filter="*" class="filter-active">All</li>
@@ -159,7 +130,7 @@
             </div>
           </div>
 
-          <div class="row portfolio-container" >
+          <div class="row portfolio-container">
             <div class="col-lg-4 col-md-6 portfolio-item filter-app">
               <div class="portfolio-wrap">
                 <img
@@ -365,7 +336,7 @@
       <!-- ======= Testimonials Section ======= -->
       <section id="testimonials" class="testimonials section-bg">
         <div class="container">
-          <div class="section-title"  data-aos-delay="100">
+          <div class="section-title" data-aos-delay="100">
             <h2>Come play padel with us and enjoy</h2>
           </div>
         </div>
@@ -375,13 +346,13 @@
       <!-- ======= Team Section ======= -->
       <section id="team" class="team">
         <div class="container">
-          <div class="section-title"  data-aos-delay="100">
+          <div class="section-title" data-aos-delay="100">
             <h2>Our Professional Coaches</h2>
           </div>
 
           <div class="row">
             <div class="col-lg-4 col-md-6">
-              <div class="member" >
+              <div class="member">
                 <div class="pic">
                   <img
                     src="assets/img/team/team-1.jpg"
@@ -402,7 +373,7 @@
             </div>
 
             <div class="col-lg-4 col-md-6">
-              <div class="member"  data-aos-delay="150">
+              <div class="member" data-aos-delay="150">
                 <div class="pic">
                   <img
                     src="assets/img/team/team-2.jpg"
@@ -423,7 +394,7 @@
             </div>
 
             <div class="col-lg-4 col-md-6">
-              <div class="member"  data-aos-delay="300">
+              <div class="member" data-aos-delay="300">
                 <div class="pic">
                   <img
                     src="assets/img/team/team-3.jpg"
@@ -449,10 +420,9 @@
 
       <!-- ======= Contact Section ======= -->
       <section id="contact" class="contact section-bg">
-        <div class="container" >
+        <div class="container">
           <div class="section-title">
             <h2>Contact</h2>
-           
           </div>
 
           <div class="row">
@@ -564,6 +534,11 @@
 <script>
 export default {
   name: "HelloWorld",
+  data() {
+    return {
+      logoUrl: require("../../public/assets/img/padel-logo.png")
+    };
+  },
   props: {
     msg: String
   }
