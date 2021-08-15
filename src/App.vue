@@ -1,11 +1,11 @@
 <template>
   <v-app class="fill-height">
-    <v-app-bar app color="primary" dark>
+    <v-app-bar app color="rgba(103, 176, 209, 0.8)" dark>
       <div class="d-flex align-center">
         <a href="/">
           <v-img
-            alt="Vuetify Name"
-            class="shrink mt-1 hidden-sm-and-down"
+            alt="Home Page"
+            class="shrink mt-1 "
             contain
             min-width="100"
             :src="logoUrl"

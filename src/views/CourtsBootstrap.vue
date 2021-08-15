@@ -1,20 +1,25 @@
 <template>
-  <div class="d-flex flex-row justify-center mb-6">
-    <CourtCarousel
-      class="pa-2"
-      :slides="slides1"
-      title="WPT Court"
-      :description="description1"
-      :subtitle="subtitle1"
-    />
-    <CourtCarousel
-      class="pa-2"
-      :slides="slides2"
-      title="Panoramic Court"
-      :description="description2"
-      :subtitle="subtitle2"
-    />
-  </div>
+  <v-container class="grey lighten-5 mb-6">
+    <v-row align="center" no-gutters>
+      <v-col>
+        <CourtCarousel
+          class="pa-2 "
+          :slides="slides1"
+          title="WPT Court"
+          :description="description1"
+          :subtitle="subtitle1"
+        />
+      </v-col>
+      <v-col>
+        <CourtCarousel
+          class="pa-2 "
+          :slides="slides2"
+          title="Panoramic Court"
+          :description="description2"
+          :subtitle="subtitle2"
+        />
+      </v-col> </v-row
+  ></v-container>
 </template>
 <script>
 import CourtCarousel from "../components/CourtCarousel.vue";
