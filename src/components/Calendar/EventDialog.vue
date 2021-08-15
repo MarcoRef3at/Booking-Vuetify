@@ -26,7 +26,7 @@
     <v-card-text>
       <v-carousel v-model="carousel" :show-arrows="false" hide-delimiters>
         <v-carousel-item>
-          <BookingForm />
+          <BookingForm :court="court" />
         </v-carousel-item>
         <!-- <v-carousel-item>
           <div>
@@ -65,6 +65,7 @@ import BookingForm from "./BookingForm.vue";
 import { mapState, mapActions, mapGetters } from "vuex";
 import apiClient from "../../api/client";
 export default {
+  props: ["court"],
   components: { BookingForm },
   data() {
     return {

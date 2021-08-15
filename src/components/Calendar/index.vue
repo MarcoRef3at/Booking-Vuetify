@@ -70,8 +70,8 @@
           max-width="600px"
         >
           <EventDialog
-            :close-on-content-click="false"
             @setEventDetailsOpen="setEventDetailsOpen"
+            :court="selectedCourt"
           />
           <!-- :activator="selectedElement" -->
         </v-dialog>
@@ -89,6 +89,7 @@ export default {
   data: () => ({
     focus: "",
     type: "week",
+    selectedCourt: null,
 
     selectedOpen: false,
     value: "",
@@ -111,7 +112,9 @@ export default {
   }),
   mounted() {
     this.$refs.calendar.checkChange();
-    console.log(this.$route.query);
+    if ("court" in this.$route.query) {
+      this.selectedCourt = this.$route.query.court;
+    }
   },
 
   computed: {

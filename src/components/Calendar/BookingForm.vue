@@ -35,8 +35,13 @@
 
         <!-- Court Select -->
         <v-col cols="12" sm="6">
+          <!-- v-model="selectedCourt"
+            :items="courts"
+            label="Select Court"
+            required -->
           <v-select
-            :items="['Court 1', 'Court 2']"
+            v-model="selectedCourt"
+            :items="courts"
             label="Select Court"
             required
           ></v-select>
@@ -72,6 +77,7 @@ import TimePicker from "./TimePicker.vue";
 import DatePicker from "./DatePicker.vue";
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
+  props: ["court"],
   components: {
     DatePicker,
     TimePicker
@@ -81,7 +87,9 @@ export default {
       date: "",
       timeFrom: "",
       timeTo: "",
-      overlapping: false
+      overlapping: false,
+      selectedCourt: this.court,
+      courts: ["WPT Court", "Panoramic Court"]
     };
   },
   mounted() {

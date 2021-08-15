@@ -22,7 +22,15 @@
         </v-card-subtitle>
 
         <v-card-actions>
-          <v-btn color="orange lighten-2" text> Book {{ title }} </v-btn>
+          <v-btn
+            color="orange lighten-2"
+            text
+            @click="
+              $router.push({ path: '/calendar', query: { court: title } })
+            "
+          >
+            Book {{ title }}
+          </v-btn>
 
           <v-spacer></v-spacer>
 
