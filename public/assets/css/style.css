@@ -39,6 +39,25 @@ h6 {
 /*--------------------------------------------------------------
 # Back to top button
 --------------------------------------------------------------*/
+.pay {
+  background: #67b0d1;
+  text-align: center;
+  width: 149px;
+  height: 50px;
+  border-radius: 5%;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  align-self: center;
+  position: absolute;
+  right: 50%;
+  left: 45%;
+}
 .back-to-top {
   position: fixed;
   visibility: hidden;
@@ -731,7 +750,11 @@ section {
 
 # Cta
 --------------------------------------------------------------*/
-
+.logo-image {
+  width: 150px;
+  margin: -40px;
+  padding: -50px;
+}
 .booknow {
   background: fixed center center;
   background-size: cover;
