@@ -8,7 +8,7 @@
           width="100%"
           elevation="10"
           type="error"
-          v-if="overlapping"
+          v-if="Overlapping"
           >Selected Time Overlaps another reservation</v-alert
         >
 
@@ -77,7 +77,7 @@ import TimePicker from "./TimePicker.vue";
 import DatePicker from "./DatePicker.vue";
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
-  props: ["court"],
+  props: ["court", "overlapping"],
   components: {
     DatePicker,
     TimePicker
@@ -87,7 +87,7 @@ export default {
       date: "",
       timeFrom: "",
       timeTo: "",
-      overlapping: false,
+      // overlapping: false,
       selectedCourt: this.court,
       courts: ["WPT Court", "Panoramic Court"]
     };
@@ -100,7 +100,15 @@ export default {
 
   computed: {
     ...mapState("events", ["selectedEvent"]),
-    ...mapGetters("events", ["getTimeFrom", "getTimeTo", "getDate"])
+    ...mapGetters("events", ["getTimeFrom", "getTimeTo", "getDate"]),
+    Overlapping: {
+      get() {
+        return this.overlapping;
+      },
+      set(value) {
+        this.$emit("setOverlapping", value);
+      }
+    }
   },
   methods: {
     ...mapActions("events", ["updateSelectedEvent", "checkOverlapping"]),
@@ -166,14 +174,15 @@ export default {
         end,
         eventId: this.selectedEvent.id
       }).then(isOverlapping => {
+        console.log("isOverlapping:", isOverlapping);
         if (!isOverlapping) {
-          this.overlapping = false;
+          this.Overlapping = false;
           let event = this.selectedEvent;
           event.start = start;
           event.end = end;
           this.updateSelectedEvent(event);
         } else {
-          this.overlapping = true;
+          this.Overlapping = true;
         }
       });
 

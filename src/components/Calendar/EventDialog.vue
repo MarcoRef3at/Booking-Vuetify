@@ -2,9 +2,9 @@
   <v-card color="grey lighten-4" flat max-height="80vh">
     <v-toolbar :color="selectedEvent.color" dark>
       <!-- Edit Button -->
-      <v-btn icon>
+      <!-- <v-btn icon>
         <v-icon>mdi-pencil</v-icon>
-      </v-btn>
+      </v-btn> -->
 
       <!-- Event Name -->
       <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
@@ -26,7 +26,11 @@
     <v-card-text>
       <v-carousel v-model="carousel" :show-arrows="false" hide-delimiters>
         <v-carousel-item>
-          <BookingForm :court="court" />
+          <BookingForm
+            :court="court"
+            :overlapping="overlapping"
+            @setOverlapping="setOverlapping"
+          />
         </v-carousel-item>
         <!-- <v-carousel-item>
           <div>
@@ -54,7 +58,12 @@
     <v-card-actions v-if="carousel == 0">
       <v-spacer></v-spacer>
       <!-- Cancel Button -->
-      <v-btn :color="selectedEvent.color" class="white--text" @click="payNow">
+      <v-btn
+        :disabled="overlapping"
+        :color="selectedEvent.color"
+        class="white--text"
+        @click="payNow"
+      >
         Pay Now To Book
       </v-btn>
     </v-card-actions>
@@ -69,7 +78,8 @@ export default {
   components: { BookingForm },
   data() {
     return {
-      carousel: 0
+      carousel: 0,
+      overlapping: false
     };
   },
 
@@ -89,6 +99,9 @@ export default {
         this.$router.push("payment");
         // this.$emit("setEventDetailsOpen", false)
       });
+    },
+    setOverlapping(value) {
+      this.overlapping = value;
     }
   }
 };
