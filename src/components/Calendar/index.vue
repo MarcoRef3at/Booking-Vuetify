@@ -341,7 +341,6 @@ export default {
       this.$refs.calendar.next();
     },
     showEvent({ nativeEvent, event }) {
-      console.log("event:", event);
       if (event.editable) {
         const open = () => {
           this.updateSelectedEvent(event);

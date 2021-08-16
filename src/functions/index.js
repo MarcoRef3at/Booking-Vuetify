@@ -1,3 +1,5 @@
+import config from "../api/config";
+
 let intersections = [];
 export const getDateRangesIntersection = timeEntries => {
   let i = 0,
@@ -54,4 +56,44 @@ const getIntersection = (a, b) => {
     start: max.start,
     end: min.end < max.end ? min.end : max.end
   };
+};
+
+export const formatDate = date => {
+  let year = JSON.stringify(new Date(date).getFullYear());
+
+  let month = new Date(date).getMonth() + 1;
+  if (month < 10) {
+    month = `0${month}`;
+  }
+  let day = new Date(date).getDate();
+  if (day < 10) {
+    day = `0${day}`;
+  }
+  return `${year}-${month}-${day}T00:00:00`;
+};
+
+export const formatStart = date => {
+  let year = JSON.stringify(new Date(date).getFullYear());
+
+  let month = new Date(date).getMonth() + 1;
+  if (month < 10) {
+    month = `0${month}`;
+  }
+  let day = new Date(date).getDate();
+  if (day < 10) {
+    day = `0${day}`;
+  }
+  let hours = (date.getHours() < 10 ? "0" : "") + date.getHours();
+  let minutes = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
+  return `${year}-${month}-${day}T${hours}:${minutes}:00`;
+};
+
+export const getStaffId = court => {
+  let courtId =
+    court == "WPT Court"
+      ? [config.WPT_STAFF_ID]
+      : court == "Panoramic Court"
+      ? [config.PANORAMIC_STAFF_ID]
+      : [config.WPT_STAFF_ID, config.PANORAMIC_STAFF_ID];
+  return courtId;
 };

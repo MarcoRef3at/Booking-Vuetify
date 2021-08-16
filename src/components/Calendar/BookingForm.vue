@@ -1,83 +1,87 @@
 <template>
-  <div>
-    <v-container>
-      <v-row>
-        <!-- Overlap Warning -->
-        <v-alert
-          color="red"
-          width="100%"
-          elevation="10"
-          type="error"
-          v-if="Overlapping"
-          >Selected Time Overlaps another reservation</v-alert
-        >
+  <v-container>
+    <v-row>
+      <!-- Overlap Warning -->
+      <v-alert
+        color="red"
+        width="100%"
+        elevation="10"
+        type="error"
+        v-if="errorMessage"
+        >{{ errorMessage }}</v-alert
+      >
 
-        <!-- Date Picker -->
-        <v-col cols="12">
-          <DatePicker :parentDate="date" @setDate="setDate" />
-        </v-col>
+      <!-- Date Picker -->
+      <v-col cols="12">
+        <DatePicker :parentDate="date" @setDate="setDate" />
+      </v-col>
 
-        <!-- TimeFrom Picker -->
-        <v-col cols="11" sm="6">
-          <TimePicker
-            :title="'Time From'"
-            :parentTime="timeFrom"
-            @setTime="setTimeFrom"
-          />
-        </v-col>
-        <v-col cols="11" sm="6">
-          <TimePicker
-            :title="'Time to'"
-            :parentTime="timeTo"
-            @setTime="setTimeTo"
-          />
-        </v-col>
+      <!-- TimeFrom Picker -->
+      <v-col cols="11" sm="6">
+        <TimePicker
+          :title="'Time From'"
+          :parentTime="timeFrom"
+          @setTime="setTimeFrom"
+        />
+      </v-col>
+      <v-col cols="11" sm="6">
+        <TimePicker
+          :title="'Time to'"
+          :parentTime="timeTo"
+          @setTime="setTimeTo"
+        />
+      </v-col>
 
-        <!-- Court Select -->
-        <v-col cols="12" sm="6">
-          <!-- v-model="selectedCourt"
+      <!-- Court Select -->
+      <v-col cols="12" sm="6">
+        <!-- v-model="selectedCourt"
             :items="courts"
             label="Select Court"
             required -->
-          <v-select
-            v-model="selectedCourt"
-            :items="courts"
-            label="Select Court"
-            required
-          ></v-select>
-        </v-col>
+        <v-select
+          v-model="selectedCourt"
+          :items="courts"
+          label="Select Court"
+          required
+        ></v-select>
+      </v-col>
 
-        <!-- Details -->
-        <v-col cols="12">
-          <v-text-field label="First Name" required></v-text-field>
-        </v-col>
+      <!-- Details -->
+      <v-col cols="12">
+        <v-text-field label="Full Name" required v-model="name"></v-text-field>
+      </v-col>
 
-        <v-col cols="12">
-          <v-text-field
-            label="Last Name"
-            hint="example of persistent helper text"
-            persistent-hint
-            required
-          ></v-text-field>
-        </v-col>
-
-        <v-col cols="12">
-          <v-text-field label="Email" required></v-text-field>
-        </v-col>
-
-        <v-col cols="12">
-          <v-text-field label="Phone" required></v-text-field>
-        </v-col>
-      </v-row>
-    </v-container>
-  </div>
+      <v-col cols="12">
+        <v-text-field
+          label="Email"
+          required
+          type="email"
+          v-model="email"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="12">
+        <v-text-field
+          label="Phone"
+          required
+          type="phone"
+          v-model="phone"
+        ></v-text-field>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 <script>
 import TimePicker from "./TimePicker.vue";
 import DatePicker from "./DatePicker.vue";
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
-  props: ["court", "overlapping"],
+  props: [
+    "court",
+    "CustomerName",
+    "CustomerEmail",
+    "CustomerPhone",
+    "errorMessage"
+  ],
   components: {
     DatePicker,
     TimePicker
@@ -87,7 +91,6 @@ export default {
       date: "",
       timeFrom: "",
       timeTo: "",
-      // overlapping: false,
       selectedCourt: this.court,
       courts: ["WPT Court", "Panoramic Court"]
     };
@@ -101,12 +104,38 @@ export default {
   computed: {
     ...mapState("events", ["selectedEvent"]),
     ...mapGetters("events", ["getTimeFrom", "getTimeTo", "getDate"]),
-    Overlapping: {
+
+    error: {
       get() {
-        return this.overlapping;
+        return this.errorMessage;
       },
       set(value) {
-        this.$emit("setOverlapping", value);
+        this.$emit("setErrorMessage", value);
+      }
+    },
+
+    name: {
+      get() {
+        return this.CustomerName;
+      },
+      set(value) {
+        this.$emit("setCustomerName", value);
+      }
+    },
+    email: {
+      get() {
+        return this.CustomerEmail;
+      },
+      set(value) {
+        this.$emit("setCustomerEmail", value);
+      }
+    },
+    phone: {
+      get() {
+        return this.CustomerPhone;
+      },
+      set(value) {
+        this.$emit("setCustomerPhone", value);
       }
     }
   },
@@ -176,13 +205,13 @@ export default {
       }).then(isOverlapping => {
         console.log("isOverlapping:", isOverlapping);
         if (!isOverlapping) {
-          this.Overlapping = false;
+          this.error = false;
           let event = this.selectedEvent;
           event.start = start;
           event.end = end;
           this.updateSelectedEvent(event);
         } else {
-          this.Overlapping = true;
+          this.error = "Selected Time Overlaps another reservation";
         }
       });
 

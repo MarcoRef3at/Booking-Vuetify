@@ -1,5 +1,5 @@
 <template>
-  <v-card color="grey lighten-4" flat max-height="80vh">
+  <v-card color="grey lighten-4" flat>
     <v-toolbar :color="selectedEvent.color" dark>
       <!-- Edit Button -->
       <!-- <v-btn icon>
@@ -24,34 +24,21 @@
     <!-- Form Body -->
 
     <v-card-text>
-      <v-carousel v-model="carousel" :show-arrows="false" hide-delimiters>
-        <v-carousel-item>
-          <BookingForm
-            :court="court"
-            :overlapping="overlapping"
-            @setOverlapping="setOverlapping"
-          />
-        </v-carousel-item>
-        <!-- <v-carousel-item>
-          <div>
-            <iframe
-              :src="getIframeSrc"
-              width="40%"
-              height="60%"
-              scrolling="yes"
-              frameborder="0"
-              style="
-            overflow: hidden;
-            overflow-x: hidden;
-            overflow-y: hidden;
-           
-            position: fixed;
-          
-          "
-            ></iframe>
-          </div>
-        </v-carousel-item> -->
-      </v-carousel>
+      <!-- <v-carousel v-model="carousel" :show-arrows="false" hide-delimiters>
+        <v-carousel-item> -->
+      <BookingForm
+        :court="court"
+        :errorMessage="errorMessage"
+        @setErrorMessage="setErrorMessage"
+        :CustomerName="CustomerName"
+        @setCustomerName="setCustomerName"
+        :CustomerEmail="CustomerEmail"
+        @setCustomerEmail="setCustomerEmail"
+        :CustomerPhone="CustomerPhone"
+        @setCustomerPhone="setCustomerPhone"
+      />
+      <!-- </v-carousel-item>
+      </v-carousel> -->
     </v-card-text>
 
     <!-- Card Footer -->
@@ -59,12 +46,21 @@
       <v-spacer></v-spacer>
       <!-- Cancel Button -->
       <v-btn
-        :disabled="overlapping"
+        :disabled="errorMessage !== false"
+        color="#757575"
+        class="white--text"
+        @click="payLater"
+        :loading="payLaterLoading"
+      >
+        Pay Later
+      </v-btn>
+      <v-btn
+        :disabled="errorMessage !== false"
         :color="selectedEvent.color"
         class="white--text"
         @click="payNow"
       >
-        Pay Now To Book
+        Pay Now
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -79,7 +75,11 @@ export default {
   data() {
     return {
       carousel: 0,
-      overlapping: false
+      CustomerName: null,
+      CustomerEmail: null,
+      CustomerPhone: null,
+      payLaterLoading: false,
+      errorMessage: false
     };
   },
 
@@ -88,20 +88,47 @@ export default {
     ...mapGetters("events", ["getIframeSrc"])
   },
   methods: {
-    ...mapActions("events", ["deleteEvent", "bookEvent"]),
+    ...mapActions("events", ["deleteEvent", "pay", "bookEvent"]),
     deleteEvents() {
       this.deleteEvent(this.selectedEvent);
       this.$emit("setEventDetailsOpen", false);
     },
 
     payNow() {
-      this.bookEvent().then(() => {
+      this.pay().then(() => {
         this.$router.push("payment");
         // this.$emit("setEventDetailsOpen", false)
       });
     },
-    setOverlapping(value) {
-      this.overlapping = value;
+    payLater() {
+      this.payLaterLoading = true;
+      this.bookEvent({
+        CustomerName: this.CustomerName,
+        CustomerEmail: this.CustomerEmail,
+        CustomerPhone: this.CustomerPhone,
+        courtName: "court" in this.$route.query ? this.$route.query.court : null
+      })
+        .then(res => {})
+        .catch(async err => {
+          await setTimeout(() => {
+            this.errorMessage = false;
+          }, 2000);
+          this.errorMessage = err;
+        })
+        .finally(() => (this.payLaterLoading = false));
+    },
+
+    setErrorMessage(value) {
+      this.errorMessage = value;
+    },
+    setCustomerName(value) {
+      this.CustomerName = value;
+    },
+    setCustomerEmail(value) {
+      this.CustomerEmail = value;
+    },
+    setCustomerPhone(value) {
+      this.CustomerPhone = value;
     }
   }
 };

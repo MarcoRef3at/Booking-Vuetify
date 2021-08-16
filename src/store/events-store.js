@@ -2,7 +2,12 @@ import { corsBridge, paymobApi } from "../api/client";
 import config from "../api/config";
 import endpoints from "../api/endpoints";
 import getPaymobIFrameToken from "../api/paymob_request";
-import { getDateRangesIntersection } from "./../functions/index";
+import {
+  formatDate,
+  formatStart,
+  getDateRangesIntersection,
+  getStaffId
+} from "./../functions/index";
 const state = {
   eventsArr: [],
   selectedEvent: {},
@@ -31,28 +36,9 @@ const actions = {
     let { start, end, court } = payload;
     let startDate = new Date(start);
     let endDate = new Date(new Date(end).setHours(23, 59));
-    const formatDate = date => {
-      let year = JSON.stringify(new Date(date).getFullYear());
-
-      let month = new Date(date).getMonth() + 1;
-      if (month < 10) {
-        month = `0${month}`;
-      }
-      let day = new Date(date).getDate();
-      if (day < 10) {
-        day = `0${day}`;
-      }
-      return `${year}-${month}-${day}T00:00:00`;
-    };
-    let courtId =
-      court == "WPT Court"
-        ? [config.WPT_STAFF_ID]
-        : court == "Panoramic Court"
-        ? [config.PANORAMIC_STAFF_ID]
-        : [config.WPT_STAFF_ID, config.PANORAMIC_STAFF_ID];
 
     let body = {
-      StaffList: courtId,
+      StaffList: getStaffId(court),
       Start: formatDate(startDate),
       End: formatDate(endDate),
       TimeZone: "Africa/Cairo"
@@ -114,32 +100,43 @@ const actions = {
       commit("updateEvents", blocked);
     });
   },
-  bookEvent({ dispatch, commit }) {
+  pay({ dispatch, commit }) {
     return new Promise((resolve, reject) => {
       getPaymobIFrameToken(300)
         .then(iframeToken => {
           commit("updateIframeToken", iframeToken);
           resolve();
         })
-        // clientApi
-        //   .post("reservation", {
-        //     serviceId: 1,
-        //     start: state.selectedEvent.start,
-        //     end: state.selectedEvent.end,
-        //   })
-        //   .then((res) => {
-        //     commit("updateIframeToken", res.data.iFrameToken);
-        //     console.log("r:", res.data);
-
-        //     dispatch("getAllEvents");
-        //     resolve(res); //returns x in .then
-        //   })
         .catch(err => {
           console.log("err:", err.response.data);
           reject(err); //returns y in .catch
         });
     });
   },
+
+  bookEvent({ commit, getters }, payload) {
+    let { CustomerName, CustomerEmail, CustomerPhone } = payload;
+    let Start = formatStart(new Date(state.selectedEvent.start));
+    let body = {
+      ServiceId: "xeyVTDNAYku1fOmnyi7YoQ2",
+      StaffList: getStaffId(CustomerName),
+      CustomerName,
+      CustomerEmail,
+      CustomerPhone,
+      Start,
+      StartInCustomerTimeZone: Start,
+      CustomerTimeZone: "Egypt Standard Time"
+    };
+    return new Promise((resolve, reject) => {
+      corsBridge
+        .post(endpoints.CreateBooking, body)
+        .then(res => {
+          resolve(res.data); //returns x in .then
+        })
+        .catch(e => reject(e.response.data.Body.FaultMessage));
+    });
+  },
+
   updateSelectedEvent({ commit }, payload) {
     commit("updateSelectedEvent", payload);
   },

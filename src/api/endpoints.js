@@ -8,4 +8,6 @@ export default {
   CARD_PAYMENT_KEY: "/acceptance/payment_keys",
   getStaffAvailability:
     "?type=post&url=https://outlook.office365.com/owa/calendar/Test123@orascomdh.onmicrosoft.com/bookings/service.svc/GetStaffBookability",
+  CreateBooking:
+    "?type=post&url=https://outlook.office365.com/owa/calendar/Test123@orascomdh.onmicrosoft.com/bookings/service.svc/CreateBooking"
 };
