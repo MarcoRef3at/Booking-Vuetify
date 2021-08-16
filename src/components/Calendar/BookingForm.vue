@@ -48,7 +48,12 @@
 
       <!-- Details -->
       <v-col cols="12">
-        <v-text-field label="Full Name" required v-model="name"></v-text-field>
+        <v-text-field
+          label="Full Name"
+          required
+          v-model="name"
+          :rules="nameRules"
+        ></v-text-field>
       </v-col>
 
       <v-col cols="12">
@@ -56,6 +61,7 @@
           label="Email"
           required
           type="email"
+          :rules="emailRules"
           v-model="email"
         ></v-text-field>
       </v-col>
@@ -65,9 +71,17 @@
           required
           type="phone"
           v-model="phone"
+          :rules="phoneRules"
         ></v-text-field>
       </v-col>
     </v-row>
+
+    <!-- <v-checkbox
+      v-model="checkbox"
+      :rules="[v => !!v || 'You must agree to continue!']"
+      label="Do you agree?"
+      required
+    ></v-checkbox> -->
   </v-container>
 </template>
 <script>
@@ -80,7 +94,10 @@ export default {
     "CustomerName",
     "CustomerEmail",
     "CustomerPhone",
-    "errorMessage"
+    "errorMessage",
+    "nameRules",
+    "emailRules",
+    "phoneRules"
   ],
   components: {
     DatePicker,
