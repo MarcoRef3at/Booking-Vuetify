@@ -161,7 +161,7 @@ export default {
     setDate(date) {
       this.date = date;
     },
-    setTimeFrom(time_From) {
+    setTimeFrom(time_From, settingFrom_From = true) {
       // Convert Time to timestamp to get difference between new one and old one
       let hoursOld = this.timeFrom.split(":")[0];
       let minutesOld = this.timeFrom.split(":")[1];
@@ -184,26 +184,47 @@ export default {
       let hours = new Date(timeToNew).getHours();
       let minutes = new Date(timeToNew).getMinutes();
 
-      this.setTimeTo(`${hours}:${minutes < 10 ? `0` + minutes : minutes}`);
-
-      // let eventStart = new Date(this.selectedEvent.start);
-      // eventStart.setHours(hours, minutes);
-      // let event = this.selectedEvent;
-      // event.start = eventStart;
-      // this.updateSelectedEvent(event);
+      // Parameter to check if changing date from (from Date) not from (to Date) to avoid inifint loop
+      if (settingFrom_From)
+        this.setTimeTo(
+          `${hours}:${minutes < 10 ? `0` + minutes : minutes}`,
+          false
+        );
     },
-    setTimeTo(timeTo) {
-      console.log("timeTo:", timeTo);
-      let hours = timeTo.split(":")[0];
-      let minutes = timeTo.split(":")[1];
-      this.timeTo = timeTo;
-      this.updateEvent();
+    setTimeTo(time_To, settingFrom_To = true) {
+      let hoursOld = this.timeTo.split(":")[0];
+      let minutesOld = this.timeTo.split(":")[1];
+      let timeToOld = new Date(this.date).setHours(hoursOld, minutesOld);
+      let hoursNew = time_To.split(":")[0];
+      let minutesNew = time_To.split(":")[1];
+      let timeToNew = new Date(this.date).setHours(hoursNew, minutesNew);
 
-      // let eventStart = new Date(this.selectedEvent.end);
-      // eventStart.setHours(hours, minutes);
-      // let event = this.selectedEvent;
-      // event.end = eventStart;
-      // this.updateSelectedEvent(event);
+      let timeDifference = timeToNew - timeToOld;
+
+      this.timeTo = time_To;
+
+      // Add Difference to timeTo
+      let hoursFromOld = this.timeFrom.split(":")[0];
+      let minutesFromOld = this.timeFrom.split(":")[1];
+      let timeFromOld = new Date(this.date).setHours(
+        hoursFromOld,
+        minutesFromOld
+      );
+
+      let timeFromNew = timeFromOld + timeDifference;
+      let hours = new Date(timeFromNew).getHours();
+      let minutes = new Date(timeFromNew).getMinutes();
+      console.log("timeDifference:", timeToNew - timeFromOld);
+      // Parameter to check if changing date from (from Date) not from (to Date) to avoid inifint loop
+      if (settingFrom_To)
+        if (timeToNew - timeFromOld < 3600000) {
+          this.setTimeFrom(
+            `${hours}:${minutes < 10 ? `0` + minutes : minutes}`,
+            false
+          );
+        }
+
+      this.updateEvent();
     },
     updateEvent() {
       // Format Hours and Minutes in Comonent's Data
