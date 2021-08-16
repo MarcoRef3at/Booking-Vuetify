@@ -1,3 +1,4 @@
+// index
 <template>
   <v-row>
     <v-col>
@@ -134,11 +135,15 @@ export default {
       "updateSelectedEvent",
       "updateEvents",
       "deleteEvent",
-      "getAllEvents"
+      "getAllEvents",
+      "resetSelectedEvent"
     ]),
 
     setEventDetailsOpen(value) {
       this.selectedOpen = value;
+      if (value == false) {
+        this.resetSelectedEvent();
+      }
     },
     setCalendarType(newType) {
       this.type = newType;
@@ -351,6 +356,8 @@ export default {
 
         if (this.selectedOpen) {
           this.selectedOpen = false;
+          this.resetSelectedEvent();
+
           requestAnimationFrame(() => requestAnimationFrame(() => open()));
         } else {
           open();

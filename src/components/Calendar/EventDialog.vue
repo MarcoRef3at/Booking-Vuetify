@@ -1,3 +1,4 @@
+// event dialoge
 <template>
   <v-card color="grey lighten-4" flat>
     <v-toolbar :color="selectedEvent.color" dark>
@@ -28,6 +29,12 @@
         <v-carousel-item> -->
       <v-form ref="form" v-model="valid" lazy-validation>
         <BookingForm
+          :parentDate="date"
+          @setDate="setDate"
+          :parentTimeFrom="timeFrom"
+          @setTimeFrom="setTimeFrom"
+          :parentTimeTo="timeTo"
+          @setTimeTo="setTimeTo"
           :court="court"
           :errorMessage="errorMessage"
           @setErrorMessage="setErrorMessage"
@@ -47,7 +54,7 @@
     </v-card-text>
 
     <!-- Card Footer -->
-    <v-card-actions v-if="carousel == 0">
+    <v-card-actions>
       <v-spacer></v-spacer>
 
       <!-- Pay Later Button -->
@@ -80,7 +87,9 @@ export default {
   components: { BookingForm },
   data() {
     return {
-      carousel: 0,
+      date: "",
+      timeFrom: "",
+      timeTo: "",
       CustomerName: null,
       CustomerEmail: null,
       CustomerPhone: null,
@@ -108,8 +117,24 @@ export default {
 
   computed: {
     ...mapState("events", ["selectedEvent"]),
-    ...mapGetters("events", ["getIframeSrc"])
+    ...mapGetters("events", [
+      "getTimeFrom",
+      "getTimeTo",
+      "getDate",
+      "getIframeSrc"
+    ])
   },
+  updated() {
+    this.date = this.getDate;
+    this.timeFrom = this.getTimeFrom;
+    this.timeTo = this.getTimeTo;
+  },
+  mounted() {
+    this.date = this.getDate;
+    this.timeFrom = this.getTimeFrom;
+    this.timeTo = this.getTimeTo;
+  },
+
   methods: {
     ...mapActions("events", ["deleteEvent", "pay", "bookEvent"]),
 
@@ -125,7 +150,6 @@ export default {
       if (this.validate()) {
         this.pay().then(() => {
           this.$router.push("payment");
-          // this.$emit("setEventDetailsOpen", false)
         });
       }
     },
@@ -164,6 +188,15 @@ export default {
     },
     setCustomerPhone(value) {
       this.CustomerPhone = value;
+    },
+    setDate(value) {
+      this.date = value;
+    },
+    setTimeFrom(value) {
+      this.timeFrom = value;
+    },
+    setTimeTo(value) {
+      this.timeTo = value;
     }
   }
 };

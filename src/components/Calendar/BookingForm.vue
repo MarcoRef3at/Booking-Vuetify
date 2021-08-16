@@ -1,3 +1,4 @@
+// bookingform
 <template>
   <v-container>
     <v-row>
@@ -90,6 +91,9 @@ import DatePicker from "./DatePicker.vue";
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   props: [
+    "parentDate",
+    "parentTimeFrom",
+    "parentTimeTo",
     "court",
     "CustomerName",
     "CustomerEmail",
@@ -105,22 +109,41 @@ export default {
   },
   data() {
     return {
-      date: "",
-      timeFrom: "",
-      timeTo: "",
+      // date: "",
+      // timeFrom: "",
+      // timeTo: "",
       selectedCourt: this.court,
       courts: ["WPT Court", "Panoramic Court"]
     };
-  },
-  mounted() {
-    this.date = this.getDate;
-    this.timeFrom = this.getTimeFrom;
-    this.timeTo = this.getTimeTo;
   },
 
   computed: {
     ...mapState("events", ["selectedEvent"]),
     ...mapGetters("events", ["getTimeFrom", "getTimeTo", "getDate"]),
+    date: {
+      get() {
+        return this.parentDate;
+      },
+      set(value) {
+        this.$emit("setDate", value);
+      }
+    },
+    timeFrom: {
+      get() {
+        return this.parentTimeFrom;
+      },
+      set(value) {
+        this.$emit("setTimeFrom", value);
+      }
+    },
+    timeTo: {
+      get() {
+        return this.parentTimeTo;
+      },
+      set(value) {
+        this.$emit("setTimeTo", value);
+      }
+    },
 
     error: {
       get() {

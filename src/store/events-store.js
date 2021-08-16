@@ -27,6 +27,9 @@ const mutations = {
   updateEvents(state, payload) {
     state.eventsArr = payload;
   },
+  resetSelectedEvent(state) {
+    state.selectedEvent = {};
+  },
   deleteEvent(state, payload) {
     state.eventsArr = state.eventsArr.filter(e => e.id != payload.id);
   }
@@ -164,6 +167,9 @@ const actions = {
       return dateRangeOverlaps(event.start, event.end, start, end);
     });
     return allowed.some(value => value);
+  },
+  resetSelectedEvent({ commit }) {
+    commit("resetSelectedEvent");
   }
 };
 const getters = {
