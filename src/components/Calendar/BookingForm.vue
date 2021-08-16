@@ -160,6 +160,7 @@ export default {
     ...mapActions("events", ["updateSelectedEvent", "checkOverlapping"]),
     setDate(date) {
       this.date = date;
+      this.updateEvent();
     },
     setTimeFrom(time_From, settingFrom_From = true) {
       // Convert Time to timestamp to get difference between new one and old one
