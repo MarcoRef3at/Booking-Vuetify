@@ -58,58 +58,106 @@ const actions = {
       TimeZone: "Africa/Cairo"
     };
     corsBridge.post(endpoints.getStaffAvailability, body).then(async events => {
-      let availableDates = events.data.StaffBookabilities[0].BookableTimeBlocks;
-      // console.log("events.data.StaffBookabilities:", events.data);
+      // let availableDates = events.data.StaffBookabilities[0].BookableTimeBlocks;
+
+      let availableDates = [];
+      await Promise.all(
+        events.data.StaffBookabilities.map(StaffBookabilities => {
+          return availableDates.push(StaffBookabilities.BookableTimeBlocks);
+        })
+      );
+
       let blocked = [];
-      // console.log("startDate:", new Date(startDate).getTime());
-      // console.log("startDate < Date.now():", startDate < Date.now());
-      // console.log("startDate:", new Date(startDate));
-      // console.log(
-      //   "startDate.setDate(startDate.getDay() + 1):",
-      //   new Date(startDate.setDate(startDate.getDate() + 1))
-      // );
-
-      // Block Previous Days
-
-      // for (
-      //   new Date(startDate).getTime();
-      //   startDate < Date.now();
-      //   new Date(startDate.setDate(startDate.getDate() + 1))
-      // ) {
-      //   let slot = {
-      //     start: new Date(startDate),
-      //     end: new Date(endDate.setDate(endDate.getDate())),
-      //   };
-      //   console.log("slot:", slot);
-      //   blocked.push(slot);
-      // }
 
       await Promise.all(
         // Filter Available Dates and convert the unavailable slots to events
-        availableDates.map((available, index, elements) => {
-          if (index < elements.length - 1) {
-            let slot = {
-              start: available.End,
-              end: elements[index + 1].Start
-            };
+        availableDates.map(courtAvailability => {
+          courtAvailability.map((available, index, elements) => {
+            if (index < elements.length - 1) {
+              let slot = {
+                start: available.End,
+                end: elements[index + 1].Start
+              };
 
-            if (
-              new Date(slot.start).getTime() ===
-                new Date(
-                  new Date(slot.start).setHours(state.End_Time)
-                ).getTime() &&
-              new Date(slot.end).getTime() ===
-                new Date(
-                  new Date(slot.start).setHours(state.Start_Time)
-                ).getTime()
-            ) {
-              // If events in non-working hours .. neglect
-            } else {
-              return blocked.push(slot);
+              if (
+                new Date(slot.start).getTime() ===
+                  new Date(
+                    new Date(slot.start).setHours(state.End_Time)
+                  ).getTime() &&
+                new Date(slot.end).getTime() ===
+                  new Date(
+                    new Date(slot.start).setHours(state.Start_Time)
+                  ).getTime()
+              ) {
+                // If events in non-working hours .. neglect
+              } else {
+                return blocked.push(slot);
+              }
             }
-          }
+          });
         })
       );
+      if (court == null) {
+        // Let duplicated values only in blocked array
+
+        const multipleDateRangeOverlaps = timeEntries => {
+          let duplicates = [];
+          const getIntersection = (a, b) => {
+            let min = a.start < b.start ? a : b;
+            let max = min == a ? b : a;
+
+            //min ends before max starts -> no intersection
+            if (min.end < max.start) return null; //the ranges don't intersect
+
+            return {
+              start: max.start,
+              end: min.end < max.end ? min.end : max.end
+            };
+          };
+          // TODO get smaller date range
+          const dateRangeOverlaps = (a_start, a_end, b_start, b_end) => {
+            if (
+              (a_start < b_start && b_start < a_end) ||
+              (a_start < b_end && b_end < a_end) ||
+              (b_start < a_start && a_end < b_end) ||
+              (a_start == b_start && a_end >= b_end) ||
+              (b_start < a_start && a_end == b_end) ||
+              (a_start == b_start && b_end >= a_end)
+            ) {
+              return duplicates.push(
+                getIntersection(
+                  { start: a_start, end: a_end },
+                  { start: b_start, end: b_end }
+                )
+              );
+            }
+
+            return false;
+          };
+          let i = 0,
+            j = 0;
+          let timeIntervals = timeEntries.filter(
+            entry => entry.start != null && entry.end != null
+          );
+
+          if (timeIntervals != null && timeIntervals.length > 1)
+            for (i = 0; i < timeIntervals.length - 1; i += 1) {
+              for (j = i + 1; j < timeIntervals.length; j += 1) {
+                if (
+                  dateRangeOverlaps(
+                    new Date(timeIntervals[i].start).getTime(),
+                    new Date(timeIntervals[i].end).getTime(),
+                    new Date(timeIntervals[j].start).getTime(),
+                    new Date(timeIntervals[j].end).getTime()
+                  )
+                )
+                  return duplicates;
+              }
+            }
+          return duplicates;
+        };
+        blocked = multipleDateRangeOverlaps(blocked);
+      }
 
       blocked.forEach(event => {
         event.start = new Date(event.start).getTime();
