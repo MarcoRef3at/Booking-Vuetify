@@ -97,3 +97,12 @@ export const getStaffId = court => {
       : [config.WPT_STAFF_ID, config.PANORAMIC_STAFF_ID];
   return courtId;
 };
+export const getServiceId = court => {
+  let serviceId =
+    court == "WPT Court"
+      ? [config.WPT_SERVICE_ID]
+      : court == "Panoramic Court"
+      ? [config.PANORAMIC_SERVICE_ID]
+      : [config.WPT_STAFF_ID, config.PANORAMIC_STAFF_ID];
+  return serviceId;
+};

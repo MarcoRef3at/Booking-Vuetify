@@ -6,6 +6,7 @@ import {
   formatDate,
   formatStart,
   getDateRangesIntersection,
+  getServiceId,
   getStaffId
 } from "./../functions/index";
 const state = {
@@ -112,7 +113,7 @@ const actions = {
     let { CustomerName, CustomerEmail, CustomerPhone, courtName } = payload;
     let Start = formatStart(new Date(state.selectedEvent.start));
     let body = {
-      ServiceId: config.SERVICE_ID,
+      ServiceId: getServiceId(courtName),
       StaffList: getStaffId(courtName),
       CustomerName,
       CustomerEmail,
@@ -138,11 +139,12 @@ const actions = {
     let { CustomerName, CustomerEmail, CustomerPhone, courtName } = payload;
     let Start = formatStart(new Date(state.selectedEvent.start));
     let body = {
-      ServiceId: config.SERVICE_ID,
+      ServiceId: getServiceId(courtName),
       StaffList: getStaffId(courtName),
       CustomerName,
       CustomerEmail,
       CustomerPhone,
+      CustomerNotes: "UnPaid",
       Start,
       StartInCustomerTimeZone: Start,
       CustomerTimeZone: "Egypt Standard Time"
