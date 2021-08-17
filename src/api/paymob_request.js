@@ -17,7 +17,10 @@ const Order_Regestiration = (AUTH_TOKEN, EGP, requestItemsBody, courtName) => {
       {
         name: courtName,
         amount_cents: EGP * 100,
-        description: JSON.stringify(requestItemsBody),
+        description: JSON.stringify({
+          _name: courtName,
+          description: requestItemsBody
+        }),
         quantity: "1"
       }
     ]
@@ -25,7 +28,8 @@ const Order_Regestiration = (AUTH_TOKEN, EGP, requestItemsBody, courtName) => {
   return paymob.post(endpoints.ORDER_REGESTIRATION, body);
 };
 
-const Card_Payment_Key = (AUTH_TOKEN, EGP, ID) => {
+const Card_Payment_Key = (AUTH_TOKEN, EGP, ID, requestItemsBody) => {
+  const { CustomerEmail, CustomerName, CustomerPhone } = requestItemsBody;
   let body = {
     auth_token: AUTH_TOKEN,
     amount_cents: EGP * 100,
@@ -34,12 +38,12 @@ const Card_Payment_Key = (AUTH_TOKEN, EGP, ID) => {
 
     billing_data: {
       apartment: "803",
-      email: "claudette09@exa.com",
+      email: CustomerEmail,
       floor: "42",
-      first_name: "Clifford",
+      first_name: CustomerName,
       street: "Ethan Land",
       building: "8028",
-      phone_number: "+86(8)9135210487",
+      phone_number: CustomerPhone,
       shipping_method: "PKG",
       postal_code: "01898",
       city: "Jaskolskiburgh",
@@ -66,7 +70,8 @@ const getPaymobIFrameToken = async (EGP, body, courtName) => {
   let CARD_PAYMENT_KEY_RES = await Card_Payment_Key(
     AUTH_API_RES.data.token,
     ORDER_REG_RES.data.amount_cents,
-    ORDER_REG_RES.data.id
+    ORDER_REG_RES.data.id,
+    body
   );
   return CARD_PAYMENT_KEY_RES.data.token;
 };
