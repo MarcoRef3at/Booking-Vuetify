@@ -4,6 +4,8 @@
       path="payment-successful.json"
       :loop="false"
       :autoPlay="true"
+      :height="500"
+      :width="500"
     />
   </div>
 </template>

@@ -3,6 +3,8 @@
     <lottie-animation
       path="payment-failed.json"
       :loop="false"
+      :height="500"
+      :width="500"
       :autoPlay="true"
     />
   </div>
