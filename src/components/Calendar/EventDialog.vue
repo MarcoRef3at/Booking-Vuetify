@@ -72,6 +72,7 @@
         :color="selectedEvent.color"
         class="white--text mr-4"
         @click="payNow"
+        :loading="payNowLoading"
       >
         Pay Now
       </v-btn>
@@ -82,6 +83,7 @@
 import BookingForm from "./BookingForm.vue";
 import { mapState, mapActions, mapGetters } from "vuex";
 import apiClient from "../../api/client";
+import { formatStart } from "../../functions/index";
 export default {
   props: ["court"],
   components: { BookingForm },
@@ -94,6 +96,7 @@ export default {
       CustomerEmail: null,
       CustomerPhone: null,
       payLaterLoading: false,
+      payNowLoading: false,
       errorMessage: false,
       valid: true,
       nameRules: [
@@ -148,7 +151,15 @@ export default {
 
     payNow() {
       if (this.validate()) {
-        this.pay().then(() => {
+        this.payNowLoading = true;
+        this.pay({
+          CustomerName: this.CustomerName,
+          CustomerEmail: this.CustomerEmail,
+          CustomerPhone: this.CustomerPhone,
+          courtName:
+            "court" in this.$route.query ? this.$route.query.court : null
+        }).then(() => {
+          this.payNowLoading = false;
           this.$router.push("payment");
         });
       }

@@ -4,6 +4,7 @@ export default {
 
   Integration_ID: 370013,
 
+  SERVICE_ID: "xeyVTDNAYku1fOmnyi7YoQ2",
   WPT_STAFF_ID: "PrnJO88PWUWaABQstbsLWA==",
   PANORAMIC_STAFF_ID: "A/lSXY2tbkquOhdhPv8sdQ=="
 };

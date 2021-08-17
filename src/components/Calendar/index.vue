@@ -10,6 +10,11 @@
         :type="type"
         @setCalendarType="setCalendarType"
       />
+      <v-progress-linear
+        :indeterminate="loading"
+        color="rgba(103, 176, 209, 0.8)"
+        :value="!loading ? 100 : 0"
+      ></v-progress-linear>
 
       <v-sheet height="600">
         <v-calendar
@@ -91,6 +96,7 @@ export default {
     focus: "",
     type: "week",
     selectedCourt: null,
+    loading: false,
 
     selectedOpen: false,
     value: "",
@@ -312,10 +318,13 @@ export default {
         : event.color;
     },
     getEvents({ start, end }) {
+      this.loading = true;
       this.getAllEvents({
         start: start.date,
         end: end.date,
         court: "court" in this.$route.query ? this.$route.query.court : null
+      }).then(() => {
+        this.loading = false;
       });
     },
     rnd(a, b) {

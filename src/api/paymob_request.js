@@ -7,12 +7,20 @@ const auth_api = () => {
   return paymob.post(endpoints.AUTH_API, body);
 };
 
-const Order_Regestiration = (AUTH_TOKEN, EGP) => {
+const Order_Regestiration = (AUTH_TOKEN, EGP, requestItemsBody, courtName) => {
   let body = {
     auth_token: AUTH_TOKEN,
     delivery_needed: "false",
     amount_cents: EGP,
-    currency: "EGP"
+    currency: "EGP",
+    items: [
+      {
+        name: courtName,
+        amount_cents: EGP * 100,
+        description: JSON.stringify(requestItemsBody),
+        quantity: "1"
+      }
+    ]
   };
   return paymob.post(endpoints.ORDER_REGESTIRATION, body);
 };
@@ -23,20 +31,7 @@ const Card_Payment_Key = (AUTH_TOKEN, EGP, ID) => {
     amount_cents: EGP * 100,
     expiration: 3600,
     order_id: ID,
-    items: [
-      {
-        name: "Court 1",
-        amount_cents: "300000",
-        description: "Court 1",
-        quantity: "1"
-      },
-      {
-        name: "ERT6565",
-        amount_cents: "200000",
-        description: "Power Bank",
-        quantity: "1"
-      }
-    ],
+
     billing_data: {
       apartment: "803",
       email: "claudette09@exa.com",
@@ -59,9 +54,14 @@ const Card_Payment_Key = (AUTH_TOKEN, EGP, ID) => {
   return paymob.post(endpoints.CARD_PAYMENT_KEY, body);
 };
 
-const getPaymobIFrameToken = async EGP => {
+const getPaymobIFrameToken = async (EGP, body, courtName) => {
   let AUTH_API_RES = await auth_api();
-  let ORDER_REG_RES = await Order_Regestiration(AUTH_API_RES.data.token, EGP);
+  let ORDER_REG_RES = await Order_Regestiration(
+    AUTH_API_RES.data.token,
+    EGP,
+    body,
+    courtName
+  );
   console.log("Order ID", ORDER_REG_RES.data.id);
   let CARD_PAYMENT_KEY_RES = await Card_Payment_Key(
     AUTH_API_RES.data.token,

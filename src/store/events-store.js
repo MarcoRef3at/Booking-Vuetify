@@ -36,76 +36,93 @@ const mutations = {
 };
 const actions = {
   getAllEvents({ commit }, payload) {
-    let { start, end, court } = payload;
-    let startDate = new Date(start);
-    let endDate = new Date(new Date(end).setHours(23, 59));
+    return new Promise((resolve, reject) => {
+      let { start, end, court } = payload;
+      let startDate = new Date(start);
+      let endDate = new Date(new Date(end).setHours(23, 59));
 
-    let body = {
-      StaffList: getStaffId(court),
-      Start: formatDate(startDate),
-      End: formatDate(endDate),
-      TimeZone: "Africa/Cairo"
-    };
-    corsBridge.post(endpoints.getStaffAvailability, body).then(async events => {
-      // let availableDates = events.data.StaffBookabilities[0].BookableTimeBlocks;
+      let body = {
+        StaffList: getStaffId(court),
+        Start: formatDate(startDate),
+        End: formatDate(endDate),
+        TimeZone: "Africa/Cairo"
+      };
+      corsBridge
+        .post(endpoints.getStaffAvailability, body)
+        .then(async events => {
+          // let availableDates = events.data.StaffBookabilities[0].BookableTimeBlocks;
 
-      let availableDates = [];
-      await Promise.all(
-        events.data.StaffBookabilities.map(StaffBookabilities => {
-          return availableDates.push(StaffBookabilities.BookableTimeBlocks);
-        })
-      );
+          let availableDates = [];
+          await Promise.all(
+            events.data.StaffBookabilities.map(StaffBookabilities => {
+              return availableDates.push(StaffBookabilities.BookableTimeBlocks);
+            })
+          );
 
-      let blocked = [];
+          let blocked = [];
 
-      await Promise.all(
-        // Filter Available Dates and convert the unavailable slots to events
-        availableDates.map(courtAvailability => {
-          courtAvailability.map((available, index, elements) => {
-            if (index < elements.length - 1) {
-              let slot = {
-                start: available.End,
-                end: elements[index + 1].Start
-              };
+          await Promise.all(
+            // Filter Available Dates and convert the unavailable slots to events
+            availableDates.map(courtAvailability => {
+              courtAvailability.map((available, index, elements) => {
+                if (index < elements.length - 1) {
+                  let slot = {
+                    start: available.End,
+                    end: elements[index + 1].Start
+                  };
 
-              if (
-                new Date(slot.start).getTime() ===
-                  new Date(
-                    new Date(slot.start).setHours(state.End_Time)
-                  ).getTime() &&
-                new Date(slot.end).getTime() ===
-                  new Date(
-                    new Date(slot.start).setHours(state.Start_Time)
-                  ).getTime()
-              ) {
-                // If events in non-working hours .. neglect
-              } else {
-                return blocked.push(slot);
-              }
-            }
+                  if (
+                    new Date(slot.start).getTime() ===
+                      new Date(
+                        new Date(slot.start).setHours(state.End_Time)
+                      ).getTime() &&
+                    new Date(slot.end).getTime() ===
+                      new Date(
+                        new Date(slot.start).setHours(state.Start_Time)
+                      ).getTime()
+                  ) {
+                    // If events in non-working hours .. neglect
+                  } else {
+                    return blocked.push(slot);
+                  }
+                }
+              });
+            })
+          );
+          if (court == null) {
+            // Let duplicated values only in blocked array
+
+            blocked = getDateRangesIntersection(blocked);
+          }
+
+          blocked.forEach(event => {
+            event.start = new Date(event.start).getTime();
+            event.end = new Date(event.end).getTime();
+            event.name = "Blocked";
+            event.color = "#757575";
+            event.timed = true;
+            event.editable = false;
           });
-        })
-      );
-      if (court == null) {
-        // Let duplicated values only in blocked array
-
-        blocked = getDateRangesIntersection(blocked);
-      }
-
-      blocked.forEach(event => {
-        event.start = new Date(event.start).getTime();
-        event.end = new Date(event.end).getTime();
-        event.name = "Blocked";
-        event.color = "#757575";
-        event.timed = true;
-        event.editable = false;
-      });
-      commit("updateEvents", blocked);
+          commit("updateEvents", blocked);
+          resolve();
+        });
     });
   },
-  pay({ dispatch, commit }) {
+  pay({ dispatch, commit }, payload) {
+    let { CustomerName, CustomerEmail, CustomerPhone, courtName } = payload;
+    let Start = formatStart(new Date(state.selectedEvent.start));
+    let body = {
+      ServiceId: config.SERVICE_ID,
+      StaffList: getStaffId(courtName),
+      CustomerName,
+      CustomerEmail,
+      CustomerPhone,
+      Start,
+      StartInCustomerTimeZone: Start,
+      CustomerTimeZone: "Egypt Standard Time"
+    };
     return new Promise((resolve, reject) => {
-      getPaymobIFrameToken(300)
+      getPaymobIFrameToken(300, body, courtName)
         .then(iframeToken => {
           commit("updateIframeToken", iframeToken);
           resolve();
@@ -118,11 +135,11 @@ const actions = {
   },
 
   bookEvent({ commit, getters }, payload) {
-    let { CustomerName, CustomerEmail, CustomerPhone } = payload;
+    let { CustomerName, CustomerEmail, CustomerPhone, courtName } = payload;
     let Start = formatStart(new Date(state.selectedEvent.start));
     let body = {
-      ServiceId: "xeyVTDNAYku1fOmnyi7YoQ2",
-      StaffList: getStaffId(CustomerName),
+      ServiceId: config.SERVICE_ID,
+      StaffList: getStaffId(courtName),
       CustomerName,
       CustomerEmail,
       CustomerPhone,
