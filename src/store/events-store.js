@@ -113,7 +113,7 @@ const actions = {
     let { CustomerName, CustomerEmail, CustomerPhone, courtName } = payload;
     let Start = formatStart(new Date(state.selectedEvent.start));
     let body = {
-      ServiceId: getServiceId(courtName),
+      ServiceId: getServiceId(courtName, true),
       StaffList: getStaffId(courtName),
       CustomerName,
       CustomerEmail,
@@ -139,7 +139,7 @@ const actions = {
     let { CustomerName, CustomerEmail, CustomerPhone, courtName } = payload;
     let Start = formatStart(new Date(state.selectedEvent.start));
     let body = {
-      ServiceId: getServiceId(courtName),
+      ServiceId: getServiceId(courtName, false),
       StaffList: getStaffId(courtName),
       CustomerName,
       CustomerEmail,

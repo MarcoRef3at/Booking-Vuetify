@@ -4,6 +4,9 @@ export default {
 
   Integration_ID: 370013,
 
+  WPT_SERVICE_ID_UNPAID: "V2pEEtPCR0iiUWrisBVT4A2",
+  PANORAMIC_SERVICE_ID_UNPAID: "okrtg-9NAEuQDEaXWpRhxQ2",
+
   WPT_SERVICE_ID: "o-rwvGu0dEatAxIAoVxcRw2",
   PANORAMIC_SERVICE_ID: "xeyVTDNAYku1fOmnyi7YoQ2",
 
