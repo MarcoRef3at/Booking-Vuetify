@@ -1,6 +1,5 @@
 import { corsBridge, paymobApi } from "../api/client";
-import config from "../api/config";
-import endpoints from "../api/endpoints";
+import endpoints from "../../public/endpoints.json";
 import getPaymobIFrameToken from "../api/paymob_request";
 import {
   formatDate,

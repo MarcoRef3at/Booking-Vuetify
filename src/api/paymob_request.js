@@ -1,6 +1,6 @@
 import { paymobApi as paymob } from "./client";
-import config from "./config";
-import endpoints from "./endpoints";
+import config from "../../public/config.json";
+import endpoints from "../../public/endpoints.json";
 
 const auth_api = () => {
   let body = { api_key: config.API_KEY };

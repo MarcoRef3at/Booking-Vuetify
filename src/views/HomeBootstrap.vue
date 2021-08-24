@@ -6,7 +6,7 @@
         <h1>Padel like never before!</h1>
         <h2>Book your padel court instantly</h2>
         <section id="cta" class="booknow">
-          <a class="cta-btn" href="/courts">Book Now</a>
+          <a class="cta-btn" @click="$router.push('/courts')">Book Now</a>
         </section>
       </div>
     </section>
@@ -26,7 +26,7 @@
                   welcomes new facilities and investors to come to El Gouna and
                   to be part of the success of padel in Egypt.
                 </p>
-                <a href="/courts" class="about-btn"
+                <a @click="$router.push('/courts')" class="about-btn"
                   >Book Now <i class="bx bx-chevron-right"></i
                 ></a>
               </div>
@@ -99,7 +99,7 @@
           <div class="text-center">
             <h3>Reserve Your Court</h3>
 
-            <a class="cta-btn" href="/courts">Book Now</a>
+            <a class="cta-btn" @click="$router.push('/courts')">Book Now</a>
           </div>
         </div>
       </section>

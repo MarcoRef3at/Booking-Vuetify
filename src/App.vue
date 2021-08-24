@@ -2,7 +2,7 @@
   <v-app class="fill-height">
     <v-app-bar app color="rgba(103, 176, 209, 0.8)" dark>
       <div class="d-flex align-center">
-        <a href="/">
+        <a @click="$router.push('/')">
           <v-img
             alt="Home Page"
             class="shrink mt-1 "
@@ -15,7 +15,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn href="/courts" text>
+      <v-btn @click="$router.push('/courts')" text>
         <span class="mr-2">Book Now</span>
       </v-btn>
     </v-app-bar>
