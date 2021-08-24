@@ -139,7 +139,12 @@ export default {
   },
 
   methods: {
-    ...mapActions("events", ["deleteEvent", "pay", "bookEvent"]),
+    ...mapActions("events", [
+      "deleteEvent",
+      "pay",
+      "bookEvent",
+      "getAllEvents"
+    ]),
 
     validate() {
       return this.$refs.form.validate();
@@ -174,7 +179,10 @@ export default {
           courtName:
             "court" in this.$route.query ? this.$route.query.court : null
         })
-          .then(res => {})
+          .then(res => {
+            this.$emit("setEventDetailsOpen", false);
+            this.getAllEvents();
+          })
           .catch(async err => {
             await setTimeout(() => {
               this.errorMessage = false;
