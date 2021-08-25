@@ -21,6 +21,11 @@
               :subtitle="subtitle2"
             />
           </v-col>
+          <section id="cta" class="booknow">
+            <a class="cta-btn" @click="$router.push('/calendar')"
+              >Book Any Court</a
+            >
+          </section>
         </v-row>
       </div>
     </section>
