@@ -207,11 +207,14 @@ export default {
 
     startTime(tms) {
       const mouse = this.toTime(tms);
-
       if (this.dragEvent && this.dragTime === null && this.dragEvent.editable) {
         const start = this.dragEvent.start;
         this.dragTime = mouse - start;
-      } else if (this.dragEvent == null && !this.selectedOpen) {
+      } else if (
+        this.dragEvent == null &&
+        !this.selectedOpen &&
+        mouse > Date.now()
+      ) {
         // Create New Event if Clicked on empty slot
         this.createStart = this.roundTime(mouse);
 

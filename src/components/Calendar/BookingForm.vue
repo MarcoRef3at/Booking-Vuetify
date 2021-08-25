@@ -262,24 +262,27 @@ export default {
       let end = date
         ? new Date(date).setHours(hoursTo, minutesTo)
         : new Date(this.date).setHours(hoursTo, minutesTo);
-      // Check Overlapping with Events in the store
-      this.checkOverlapping({
-        start,
-        end,
-        eventId: this.selectedEvent.id
-      }).then(isOverlapping => {
-        console.log("isOverlapping:", isOverlapping);
-        if (!isOverlapping) {
-          this.error = false;
-          let event = this.selectedEvent;
-          event.start = start;
-          event.end = end;
-          this.updateSelectedEvent(event);
-        } else {
-          this.error = "Selected Time Overlaps another reservation";
-        }
-      });
 
+      if (start <= Date.now()) {
+        this.error = "You can't reserve past dates";
+      } else {
+        // Check Overlapping with Events in the store
+        this.checkOverlapping({
+          start,
+          end,
+          eventId: this.selectedEvent.id
+        }).then(isOverlapping => {
+          if (!isOverlapping) {
+            this.error = false;
+            let event = this.selectedEvent;
+            event.start = start;
+            event.end = end;
+            this.updateSelectedEvent(event);
+          } else {
+            this.error = "Selected Time Overlaps another reservation";
+          }
+        });
+      }
       // console.log("isOverlapping:", isOverlapping());
     }
   }
