@@ -154,7 +154,9 @@ const actions = {
         .then(res => {
           resolve(res.data); //returns x in .then
         })
-        .catch(e => reject(e.response.data.Body.FaultMessage));
+        .catch(e => {
+          reject(e.response.data);
+        });
     });
   },
 

@@ -180,14 +180,20 @@ export default {
             "court" in this.$route.query ? this.$route.query.court : null
         })
           .then(res => {
+            // this.getAllEvents({
+            //   start: start.date,
+            //   end: end.date,
+            //   court:
+            //     "court" in this.$route.query ? this.$route.query.court : null
+            // });
             this.$emit("setEventDetailsOpen", false);
-            this.getAllEvents();
           })
           .catch(async err => {
+            console.log("err:", err);
             await setTimeout(() => {
               this.errorMessage = false;
               this.valid = true;
-            }, 2000);
+            }, 3000);
             this.errorMessage = err;
             this.valid = false;
           })
