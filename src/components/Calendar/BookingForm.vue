@@ -183,7 +183,7 @@ export default {
     ...mapActions("events", ["updateSelectedEvent", "checkOverlapping"]),
     setDate(date) {
       this.date = date;
-      this.updateEvent();
+      this.updateEvent(date);
     },
     setTimeFrom(time_From, settingFrom_From = true) {
       // Convert Time to timestamp to get difference between new one and old one
@@ -250,15 +250,18 @@ export default {
 
       this.updateEvent();
     },
-    updateEvent() {
+    updateEvent(date) {
       // Format Hours and Minutes in Comonent's Data
       let hoursFrom = this.timeFrom.split(":")[0];
       let minutesFrom = this.timeFrom.split(":")[1];
       let hoursTo = this.timeTo.split(":")[0];
       let minutesTo = this.timeTo.split(":")[1];
-      let start = new Date(this.date).setHours(hoursFrom, minutesFrom);
-      let end = new Date(this.date).setHours(hoursTo, minutesTo);
-
+      let start = date
+        ? new Date(date).setHours(hoursFrom, minutesFrom)
+        : new Date(this.date).setHours(hoursFrom, minutesFrom);
+      let end = date
+        ? new Date(date).setHours(hoursTo, minutesTo)
+        : new Date(this.date).setHours(hoursTo, minutesTo);
       // Check Overlapping with Events in the store
       this.checkOverlapping({
         start,
