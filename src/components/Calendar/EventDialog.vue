@@ -127,11 +127,11 @@ export default {
       "getIframeSrc"
     ])
   },
-  updated() {
-    this.date = this.getDate;
-    this.timeFrom = this.getTimeFrom;
-    this.timeTo = this.getTimeTo;
-  },
+  // updated() {
+  //   this.date = this.getDate;
+  //   this.timeFrom = this.getTimeFrom;
+  //   this.timeTo = this.getTimeTo;
+  // },
   mounted() {
     this.date = this.getDate;
     this.timeFrom = this.getTimeFrom;
