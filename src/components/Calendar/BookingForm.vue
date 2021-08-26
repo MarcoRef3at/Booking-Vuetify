@@ -238,10 +238,12 @@ export default {
       let timeFromNew = timeFromOld + timeDifference;
       let hours = new Date(timeFromNew).getHours();
       let minutes = new Date(timeFromNew).getMinutes();
-      console.log("timeDifference:", timeToNew - timeFromOld);
+
       // Parameter to check if changing date from (from Date) not from (to Date) to avoid inifint loop
       if (settingFrom_To)
-        if (timeToNew - timeFromOld < 3600000) {
+        if (true) {
+          // Change Time from if difference is less than one hour
+          // if (timeToNew - timeFromOld < 3600000) {
           this.setTimeFrom(
             `${hours}:${minutes < 10 ? `0` + minutes : minutes}`,
             false
