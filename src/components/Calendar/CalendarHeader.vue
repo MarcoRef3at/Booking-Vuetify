@@ -43,9 +43,6 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-item @click="$emit('setCalendarType', 'day')">
-              <v-list-item-title>Day</v-list-item-title>
-            </v-list-item>
             <v-list-item @click="$emit('setCalendarType', 'week')">
               <v-list-item-title>Week</v-list-item-title>
             </v-list-item>
