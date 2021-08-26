@@ -8,7 +8,7 @@
       </v-btn> -->
 
       <!-- Event Name -->
-      <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+      <v-toolbar-title v-html="getCourtName()"></v-toolbar-title>
       <v-spacer></v-spacer>
 
       <!-- Delete Button -->
@@ -145,6 +145,12 @@ export default {
       "bookEvent",
       "getAllEvents"
     ]),
+
+    getCourtName() {
+      return "court" in this.$route.query
+        ? this.$route.query.court
+        : "Any Court";
+    },
 
     validate() {
       return this.$refs.form.validate();

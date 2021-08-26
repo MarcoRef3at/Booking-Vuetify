@@ -1,4 +1,3 @@
-// bookingform
 <template>
   <v-container>
     <v-row>
@@ -31,20 +30,6 @@
           :parentTime="timeTo"
           @setTime="setTimeTo"
         />
-      </v-col>
-
-      <!-- Court Select -->
-      <v-col cols="12" sm="6">
-        <!-- v-model="selectedCourt"
-            :items="courts"
-            label="Select Court"
-            required -->
-        <v-select
-          v-model="selectedCourt"
-          :items="courts"
-          label="Select Court"
-          required
-        ></v-select>
       </v-col>
 
       <!-- Details -->
@@ -112,8 +97,8 @@ export default {
       // date: "",
       // timeFrom: "",
       // timeTo: "",
-      selectedCourt: this.court,
-      courts: ["WPT Court", "Panoramic Court"]
+      // selectedCourt: this.court,
+      // courts: ["WPT Court", "Panoramic Court"]
     };
   },
 

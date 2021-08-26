@@ -31,6 +31,10 @@
           {{ calendar.title }}
         </v-toolbar-title>
         <v-spacer></v-spacer>
+        <v-toolbar-title v-if="calendar">
+          {{ getCourtName() }}
+        </v-toolbar-title>
+        <v-spacer></v-spacer>
 
         <!-- Calendar Type Menu -->
         <v-menu bottom right>
@@ -71,6 +75,13 @@ export default {
         "4day": "4 Days"
       }
     };
+  },
+  methods: {
+    getCourtName() {
+      return "court" in this.$route.query
+        ? this.$route.query.court
+        : "Any Court";
+    }
   }
 };
 </script>
