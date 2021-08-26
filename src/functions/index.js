@@ -2,6 +2,7 @@ import config from "../../public/config.json";
 
 let intersections = [];
 export const getDateRangesIntersection = timeEntries => {
+  intersections = [];
   let i = 0,
     j = 0;
   let timeIntervals = timeEntries.filter(
