@@ -213,7 +213,8 @@ export default {
       } else if (
         this.dragEvent == null &&
         !this.selectedOpen &&
-        mouse > Date.now()
+        mouse >
+          new Date(new Date().setHours(new Date().getHours() + 1)).setMinutes(0)
       ) {
         // Create New Event if Clicked on empty slot
         this.createStart = this.roundTime(mouse);
@@ -239,7 +240,12 @@ export default {
     mouseMove(tms) {
       const mouse = this.toTime(tms);
       // Dragging Function
-      if (this.dragEvent && this.dragTime !== null) {
+      if (
+        this.dragEvent &&
+        this.dragTime !== null &&
+        mouse >
+          new Date(new Date().setHours(new Date().getHours() + 1)).setMinutes(0)
+      ) {
         const start = this.dragEvent.start;
         const end = this.dragEvent.end;
         const duration = end - start;
