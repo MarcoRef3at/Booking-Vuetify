@@ -4,7 +4,6 @@
       ref="dialog"
       v-model="modal2"
       :return-value.sync="time"
-      persistent
       width="290px"
     >
       <template v-slot:activator="{ on, attrs }">
@@ -17,14 +16,13 @@
           v-on="on"
         ></v-text-field>
       </template>
-      <v-time-picker v-if="modal2" v-model="time" full-width>
-        <v-spacer></v-spacer>
-        <v-btn text color="primary" @click="modal2 = false">
-          Cancel
-        </v-btn>
-        <v-btn text color="primary" @click="$refs.dialog.save(time)">
-          OK
-        </v-btn>
+      <v-time-picker
+        v-if="modal2"
+        v-model="time"
+        full-width
+        ampm-in-title
+        @click:hour="closePicker"
+      >
       </v-time-picker>
     </v-dialog>
   </div>
@@ -57,6 +55,12 @@ export default {
     return {
       modal2: false
     };
+  },
+  methods: {
+    closePicker: function(v) {
+      this.$refs.dialog.save(this.time);
+      this.modal2 = false;
+    }
   }
 };
 </script>
