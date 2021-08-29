@@ -169,10 +169,14 @@ export default {
           CustomerPhone: this.CustomerPhone,
           courtName:
             "court" in this.$route.query ? this.$route.query.court : null
-        }).then(() => {
-          this.payNowLoading = false;
-          this.$router.push("payment");
-        });
+        })
+          .then(() => {
+            this.$router.push("payment");
+          })
+          .catch(e => {
+            this.errorMessage = `Somthing Went Wrong , ${e} `;
+          })
+          .finally(() => (this.payNowLoading = false));
       }
     },
     payLater() {

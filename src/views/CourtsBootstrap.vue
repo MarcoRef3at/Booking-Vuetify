@@ -22,9 +22,14 @@
             />
           </v-col>
           <section id="cta" class="booknow">
-            <a class="cta-btn" @click="$router.push('/calendar')"
-              >Book Any Court</a
+            <v-btn
+              rounded
+              color="primary"
+              dark
+              @click="$router.push('/calendar')"
             >
+              Book Any Court
+            </v-btn>
           </section>
         </v-row>
       </div>

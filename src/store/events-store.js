@@ -121,6 +121,7 @@ const actions = {
       StartInCustomerTimeZone: Start,
       CustomerTimeZone: "Egypt Standard Time"
     };
+    // setTimeout(() => {
     return new Promise((resolve, reject) => {
       getPaymobIFrameToken(300, body, courtName)
         .then(iframeToken => {
@@ -128,10 +129,10 @@ const actions = {
           resolve();
         })
         .catch(err => {
-          console.log("err:", err.response.data);
-          reject(err); //returns y in .catch
+          reject(err.response.data.items.name); //returns y in .catch
         });
     });
+    // }, 50);
   },
 
   bookEvent({ commit, getters }, payload) {
