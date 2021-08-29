@@ -15,7 +15,7 @@ const Order_Regestiration = (AUTH_TOKEN, EGP, requestItemsBody, courtName) => {
     currency: "EGP",
     items: [
       {
-        name: courtName,
+        name: courtName ? courtName : "Any Court",
         amount_cents: EGP * 100,
         description: JSON.stringify({
           _name: courtName,
