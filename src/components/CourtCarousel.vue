@@ -23,8 +23,9 @@
 
         <v-card-actions>
           <v-btn
-            color="orange lighten-2"
-            text
+            rounded
+            color="primary"
+            dark
             @click="
               $router.push({ path: '/calendar', query: { court: title } })
             "
