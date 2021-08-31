@@ -230,6 +230,7 @@ export default {
         };
 
         this.events.push(this.createEvent);
+        this.showEvent({ null: null, event: this.createEvent });
       }
     },
     extendBottom(event) {
@@ -366,6 +367,7 @@ export default {
       this.$refs.calendar.next();
     },
     showEvent({ nativeEvent, event }) {
+      console.log("nativeEvent:", nativeEvent);
       if (event.editable) {
         const open = () => {
           this.updateSelectedEvent(event);
@@ -383,7 +385,7 @@ export default {
           open();
         }
 
-        nativeEvent.stopPropagation();
+        // nativeEvent.stopPropagation();
       }
     }
   }
