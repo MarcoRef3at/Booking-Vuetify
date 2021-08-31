@@ -143,7 +143,8 @@ export default {
       "deleteEvent",
       "pay",
       "bookEvent",
-      "getAllEvents"
+      "getAllEvents",
+      "disableEvent"
     ]),
 
     getCourtName() {
@@ -190,12 +191,10 @@ export default {
             "court" in this.$route.query ? this.$route.query.court : null
         })
           .then(res => {
-            // this.getAllEvents({
-            //   start: start.date,
-            //   end: end.date,
-            //   court:
-            //     "court" in this.$route.query ? this.$route.query.court : null
-            // });
+            let event = this.selectedEvent;
+            event.editable = false;
+            event.color = "#757575";
+            this.disableEvent(event);
             this.$emit("setEventDetailsOpen", false);
           })
           .catch(async err => {
