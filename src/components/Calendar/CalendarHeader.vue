@@ -37,27 +37,6 @@
         <v-spacer></v-spacer>
 
         <!-- Calendar Type Menu -->
-        <v-menu bottom right>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
-              <span>{{ typeToLabel[type] }}</span>
-              <v-icon right>
-                mdi-menu-down
-              </v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item @click="$emit('setCalendarType', 'week')">
-              <v-list-item-title>Week</v-list-item-title>
-            </v-list-item>
-            <v-list-item @click="$emit('setCalendarType', 'month')">
-              <v-list-item-title>Month</v-list-item-title>
-            </v-list-item>
-            <v-list-item @click="$emit('setCalendarType', '4day')">
-              <v-list-item-title>4 days</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
       </v-toolbar>
     </v-sheet>
   </div>
@@ -67,14 +46,7 @@
 export default {
   props: ["calendar", "type"],
   data() {
-    return {
-      typeToLabel: {
-        month: "Month",
-        week: "Week",
-        day: "Day",
-        "4day": "4 Days"
-      }
-    };
+    return {};
   },
   methods: {
     getCourtName() {
