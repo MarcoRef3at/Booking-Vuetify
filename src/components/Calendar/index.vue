@@ -258,20 +258,22 @@ export default {
           this.dragEvent.start = newStart;
           this.dragEvent.end = newEnd;
         }
-      } else if (this.createEvent && this.createStart !== null) {
-        //  Buttom Extend in new events AND preCreated Events
-        const mouseRounded = this.roundTime(mouse, false);
-        const min = Math.min(mouseRounded, this.createStart);
-        const max = Math.max(mouseRounded, this.createStart);
-        if (
-          this.createEvent.editable &&
-          min - max != 0 &&
-          !this.checkOverlapping(min, max, this.createEvent.id)
-        ) {
-          this.createEvent.start = min;
-          this.createEvent.end = max;
-        }
       }
+      // else if (this.createEvent && this.createStart !== null) {
+
+      //   //  Buttom Extend in new events AND preCreated Events
+      //   const mouseRounded = this.roundTime(mouse, false);
+      //   const min = Math.min(mouseRounded, this.createStart);
+      //   const max = Math.max(mouseRounded, this.createStart);
+      //   if (
+      //     this.createEvent.editable &&
+      //     min - max != 0 &&
+      //     !this.checkOverlapping(min, max, this.createEvent.id)
+      //   ) {
+      //     this.createEvent.start = min;
+      //     this.createEvent.end = max;
+      //   }
+      // }
     },
     endDrag() {
       this.dragTime = null;
