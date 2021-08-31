@@ -32,6 +32,13 @@ const mutations = {
   },
   deleteEvent(state, payload) {
     state.eventsArr = state.eventsArr.filter(e => e.id != payload.id);
+  },
+  disableEvent(state, payload) {
+    state.eventsArr.map((event, i) => {
+      if (event.id == payload.id) {
+        state.eventsArr[i] = payload;
+      }
+    });
   }
 };
 const actions = {
@@ -163,6 +170,9 @@ const actions = {
 
   updateSelectedEvent({ commit }, payload) {
     commit("updateSelectedEvent", payload);
+  },
+  disableEvent({ commit }, payload) {
+    commit("disableEvent", payload);
   },
   updateEvents({ commit }, payload) {
     commit("updateEvents", payload);

@@ -33,7 +33,6 @@
           @mouseleave.native="cancelDrag"
           @click:event="showEvent"
           @click:more="viewDay"
-          @click:date="viewDay"
           @touchstart:event="startDrag"
           @touchstart:time="startTime"
           @touchmove:time="mouseMove"
