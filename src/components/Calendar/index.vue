@@ -78,6 +78,12 @@
           <EventDialog
             @setEventDetailsOpen="setEventDetailsOpen"
             :court="selectedCourt"
+            :parentDate="date"
+            @setDate="setDate"
+            :parentTimeFrom="timeFrom"
+            @setTimeFrom="setTimeFrom"
+            :parentTimeTo="timeTo"
+            @setTimeTo="setTimeTo"
           />
           <!-- :activator="selectedElement" -->
         </v-dialog>
@@ -88,7 +94,7 @@
 <script>
 import EventDialog from "./EventDialog.vue";
 import CalendarHeader from "./CalendarHeader.vue";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
   components: { CalendarHeader, EventDialog },
@@ -115,7 +121,10 @@ export default {
     createEvent: null,
     createStart: null,
     extendOriginal: null,
-    defaultDuration: 60 //minutes
+    defaultDuration: 60, //minutes
+    date: "",
+    timeFrom: "",
+    timeTo: ""
   }),
   mounted() {
     this.$refs.calendar.checkChange();
@@ -126,6 +135,12 @@ export default {
 
   computed: {
     ...mapState("events", ["eventsArr"]),
+    ...mapGetters("events", [
+      "getTimeFrom",
+      "getTimeTo",
+      "getDate",
+      "getIframeSrc"
+    ]),
 
     events: {
       get() {
@@ -144,6 +159,15 @@ export default {
       "getAllEvents",
       "resetSelectedEvent"
     ]),
+    setDate(value) {
+      this.date = value;
+    },
+    setTimeFrom(value) {
+      this.timeFrom = value;
+    },
+    setTimeTo(value) {
+      this.timeTo = value;
+    },
 
     setEventDetailsOpen(value) {
       this.selectedOpen = value;
@@ -386,6 +410,16 @@ export default {
         }
 
         // nativeEvent.stopPropagation();
+      }
+    }
+  },
+  watch: {
+    selectedOpen: function(val) {
+      console.log("val:", val);
+      if (val) {
+        this.date = this.getDate;
+        this.timeFrom = this.getTimeFrom;
+        this.timeTo = this.getTimeTo;
       }
     }
   }

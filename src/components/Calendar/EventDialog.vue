@@ -1,4 +1,3 @@
-// event dialoge
 <template>
   <v-card color="grey lighten-4" flat>
     <v-toolbar :color="selectedEvent.color" dark>
@@ -85,13 +84,13 @@ import { mapState, mapActions, mapGetters } from "vuex";
 import apiClient from "../../api/client";
 import { formatStart } from "../../functions/index";
 export default {
-  props: ["court"],
+  props: ["court", "parentDate", "parentTimeFrom", "parentTimeTo"],
   components: { BookingForm },
   data() {
     return {
-      date: "",
-      timeFrom: "",
-      timeTo: "",
+      // date: "",
+      // timeFrom: "",
+      // timeTo: "",
       CustomerName: null,
       CustomerEmail: null,
       CustomerPhone: null,
@@ -125,7 +124,32 @@ export default {
       "getTimeTo",
       "getDate",
       "getIframeSrc"
-    ])
+    ]),
+
+    date: {
+      get() {
+        return this.parentDate;
+      },
+      set(data) {
+        this.$emit("setDate", data);
+      }
+    },
+    timeFrom: {
+      get() {
+        return this.parentTimeFrom;
+      },
+      set(data) {
+        this.$emit("setTimeFrom", data);
+      }
+    },
+    timeTo: {
+      get() {
+        return this.parentTimeTo;
+      },
+      set(data) {
+        this.$emit("setTimeTo", data);
+      }
+    }
   },
   // updated() {
   //   this.date = this.getDate;
