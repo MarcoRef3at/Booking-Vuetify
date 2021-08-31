@@ -60,11 +60,11 @@
             </v-btn> -->
 
             <!-- Drag down to extend event time -->
-            <div
+            <!-- <div
               v-if="event.editable"
               class="v-event-drag-bottom"
               @mousedown.stop="extendBottom(event)"
-            ></div>
+            ></div> -->
           </template>
         </v-calendar>
 
