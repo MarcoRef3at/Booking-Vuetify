@@ -35,7 +35,7 @@ const dateRangeOverlaps = (a_start, a_end, b_start, b_end) => {
     (b_start < a_start && a_end == b_end) ||
     (a_start == b_start && b_end >= a_end)
   ) {
-    return intersections.push(
+    intersections.push(
       getIntersection(
         { start: a_start, end: a_end },
         { start: b_start, end: b_end }
