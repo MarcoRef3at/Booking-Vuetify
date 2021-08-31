@@ -222,7 +222,7 @@ export default {
         this.createEvent = {
           id: this.rnd(this.events.length, 9999),
           name: `Event #${this.rnd(this.events.length, 99)}`,
-          color: this.rndElement(this.colors),
+          color: "#2196F3",
           start: this.createStart,
           end: this.addDefaultDuration(this.createStart),
           timed: true,
