@@ -36,6 +36,7 @@ const mutations = {
   disableEvent(state, payload) {
     state.eventsArr.map((event, i) => {
       if (event.id == payload.id) {
+        console.log("i:", i);
         state.eventsArr[i] = payload;
       }
     });
@@ -45,8 +46,10 @@ const actions = {
   getAllEvents({ commit }, payload) {
     return new Promise((resolve, reject) => {
       let { start, end, court } = payload;
-      let startDate = new Date(start);
-      let endDate = new Date(new Date(end).setHours(23, 59));
+      // Add a week after and a week before when getting data to make it faster in loading
+      let startDate = new Date(start).setDate(new Date(start).getDate() - 8);
+
+      let endDate = new Date(end).setDate(new Date(end).getDate() + 8);
 
       let body = {
         StaffList: getStaffId(court),

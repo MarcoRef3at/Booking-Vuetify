@@ -167,7 +167,6 @@ export default {
       "deleteEvent",
       "pay",
       "bookEvent",
-      "getAllEvents",
       "disableEvent"
     ]),
 

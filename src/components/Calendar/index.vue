@@ -123,7 +123,8 @@ export default {
     defaultDuration: 60, //minutes
     date: "",
     timeFrom: "",
-    timeTo: ""
+    timeTo: "",
+    currentDuration: null
   }),
   mounted() {
     this.$refs.calendar.checkChange();
@@ -158,6 +159,7 @@ export default {
       "getAllEvents",
       "resetSelectedEvent"
     ]),
+
     setDate(value) {
       this.date = value;
     },
@@ -353,6 +355,7 @@ export default {
         : event.color;
     },
     getEvents({ start, end }) {
+      this.currentDuration = { start, end };
       this.loading = true;
       this.getAllEvents({
         start: start.date,
@@ -390,7 +393,6 @@ export default {
       this.$refs.calendar.next();
     },
     showEvent({ nativeEvent, event }) {
-      console.log("nativeEvent:", nativeEvent);
       if (event.editable) {
         const open = () => {
           this.updateSelectedEvent(event);
@@ -413,12 +415,13 @@ export default {
     }
   },
   watch: {
-    selectedOpen: function(val) {
-      console.log("val:", val);
-      if (val) {
+    selectedOpen: function(opened) {
+      if (opened) {
         this.date = this.getDate;
         this.timeFrom = this.getTimeFrom;
         this.timeTo = this.getTimeTo;
+      } else {
+        this.getEvents(this.currentDuration);
       }
     }
   }
