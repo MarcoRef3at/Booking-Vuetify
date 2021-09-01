@@ -113,6 +113,36 @@ const actions = {
             event.timed = true;
             event.editable = false;
           });
+          blocked.forEach(event => {
+            // filterUnavailableHours()
+            // If event starts before start time eg.4 pm
+            let startHour = new Date(event.start).getHours();
+            if (startHour < state.Start_Time) {
+              let difference =
+                state.Start_Time - new Date(event.start).getHours();
+
+              event.start = new Date().setTime(
+                new Date(event.start).getTime() + difference * 60 * 60 * 1000
+              );
+            }
+            if (new Date(event.start).getDay() < new Date(event.end).getDay()) {
+              console.log(
+                "new Date(event.end).setHours(0):",
+                new Date(
+                  new Date().setTime(
+                    new Date(event.end).getTime() -
+                      state.Start_Time * 60 * 60 * 1000 -
+                      1 * 1000
+                  )
+                )
+              );
+              event.end = new Date().setTime(
+                new Date(event.end).getTime() -
+                  state.Start_Time * 60 * 60 * 1000 -
+                  1 * 1000
+              );
+            }
+          });
           commit("updateEvents", blocked);
           resolve();
         });

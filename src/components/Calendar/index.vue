@@ -44,7 +44,8 @@
         >
           <template v-slot:event="{ event }">
             <div class="v-event-draggable unSelectable">
-              {{ timeFormater(event.start) }} - {{ timeFormater(event.end) }}
+              {{ timeFormater(event.start) }} -
+              {{ timeFormater(event.end, true) }}
             </div>
 
             <!-- Remove Icon Button
@@ -193,11 +194,17 @@ export default {
     touchemove(event) {
       console.log("touchemove:", event);
     },
-    timeFormater(timestamp) {
+    timeFormater(timestamp, isEnd = false) {
       let date = new Date(timestamp);
       let hour = date.getHours();
       let minute = date.getMinutes();
 
+      // To handle last hour of the previous day
+      // eg.11:59pm
+      if (isEnd && hour == 23 && minute == 59) {
+        hour = 0;
+        minute = 0;
+      }
       let ampm = hour >= 12 ? "PM" : "AM";
       hour = hour % 12;
       hour = hour ? hour : 12; // the hour '0' should be '12'
