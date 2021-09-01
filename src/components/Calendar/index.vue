@@ -114,6 +114,16 @@ import EventDialog from "./EventDialog.vue";
 import CalendarHeader from "./CalendarHeader.vue";
 import { mapState, mapActions, mapGetters } from "vuex";
 
+const dateRangeOverlaps = (a_start, a_end, b_start, b_end) => {
+  if (a_start < b_start && b_start < a_end) return true; // b starts in a
+  if (a_start < b_end && b_end < a_end) return true; // b ends in a
+  if (b_start < a_start && a_end < b_end) return true; // a in b
+  if (a_start == b_start && a_end >= b_end) return true; //a = b
+  if (b_start < a_start && a_end == b_end) return true;
+  if (a_start == b_start && b_end >= a_end) return true;
+  return false;
+};
+
 export default {
   components: { CalendarHeader, EventDialog },
   data: () => ({
@@ -253,16 +263,6 @@ export default {
     },
 
     checkOverlapping(start, end, eventId) {
-      const dateRangeOverlaps = (a_start, a_end, b_start, b_end) => {
-        if (a_start < b_start && b_start < a_end) return true; // b starts in a
-        if (a_start < b_end && b_end < a_end) return true; // b ends in a
-        if (b_start < a_start && a_end < b_end) return true; // a in b
-        if (a_start == b_start && a_end >= b_end) return true; //a = b
-        if (b_start < a_start && a_end == b_end) return true;
-        if (a_start == b_start && b_end >= a_end) return true;
-        return false;
-      };
-
       let allOtherEvents = this.eventsArr.filter(event => event.id != eventId);
       let allowed = allOtherEvents.map(event => {
         return dateRangeOverlaps(event.start, event.end, start, end);
@@ -272,14 +272,24 @@ export default {
 
     startTime(tms) {
       const mouse = this.toTime(tms);
+
+      const isNotOldDate =
+        mouse >
+        new Date(new Date().setHours(new Date().getHours() + 1)).setMinutes(0);
+
+      let isNotOverlapping = !this.events.some(event =>
+        dateRangeOverlaps(mouse, mouse, event.start, event.end)
+      );
+
       if (this.dragEvent && this.dragTime === null && this.dragEvent.editable) {
         const start = this.dragEvent.start;
         this.dragTime = mouse - start;
       } else if (
+        // Disable Clicking on old slots or reserver slots
         this.dragEvent == null &&
         !this.selectedOpen &&
-        mouse >
-          new Date(new Date().setHours(new Date().getHours() + 1)).setMinutes(0)
+        isNotOldDate &&
+        isNotOverlapping
       ) {
         // Create New Event if Clicked on empty slot
         this.createStart = this.roundTime(mouse);
