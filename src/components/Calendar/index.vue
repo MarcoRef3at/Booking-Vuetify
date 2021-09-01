@@ -335,21 +335,6 @@ export default {
           this.dragEvent.end = newEnd;
         }
       }
-      // else if (this.createEvent && this.createStart !== null) {
-
-      //   //  Buttom Extend in new events AND preCreated Events
-      //   const mouseRounded = this.roundTime(mouse, false);
-      //   const min = Math.min(mouseRounded, this.createStart);
-      //   const max = Math.max(mouseRounded, this.createStart);
-      //   if (
-      //     this.createEvent.editable &&
-      //     min - max != 0 &&
-      //     !this.checkOverlapping(min, max, this.createEvent.id)
-      //   ) {
-      //     this.createEvent.start = min;
-      //     this.createEvent.end = max;
-      //   }
-      // }
     },
     endDrag() {
       this.dragTime = null;
@@ -362,12 +347,14 @@ export default {
       if (this.createEvent) {
         if (this.extendOriginal) {
           this.createEvent.end = this.extendOriginal;
-        } else {
-          const i = this.events.indexOf(this.createEvent);
-          if (i !== -1) {
-            this.events.splice(i, 1);
-          }
         }
+        // else {
+        //   const i = this.events.indexOf(this.createEvent);
+        //   console.log("removed");
+        //   if (i !== -1) {
+        //     this.events.splice(i, 1);
+        //   }
+        // }
       }
 
       this.createEvent = null;
