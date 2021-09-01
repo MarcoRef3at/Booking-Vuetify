@@ -36,7 +36,7 @@ const mutations = {
   disableEvent(state, payload) {
     state.eventsArr.map((event, i) => {
       if (event.id == payload.id) {
-        console.log("i:", i);
+        // console.log("i:", i);
         state.eventsArr[i] = payload;
       }
     });
@@ -126,16 +126,6 @@ const actions = {
               );
             }
             if (new Date(event.start).getDay() < new Date(event.end).getDay()) {
-              console.log(
-                "new Date(event.end).setHours(0):",
-                new Date(
-                  new Date().setTime(
-                    new Date(event.end).getTime() -
-                      state.Start_Time * 60 * 60 * 1000 -
-                      1 * 1000
-                  )
-                )
-              );
               event.end = new Date().setTime(
                 new Date(event.end).getTime() -
                   state.Start_Time * 60 * 60 * 1000 -

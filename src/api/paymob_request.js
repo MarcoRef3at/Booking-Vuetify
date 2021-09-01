@@ -66,7 +66,7 @@ const getPaymobIFrameToken = async (EGP, body, courtName) => {
     body,
     courtName
   );
-  console.log("Order ID", ORDER_REG_RES.data.id);
+  // console.log("Order ID", ORDER_REG_RES.data.id);
   let CARD_PAYMENT_KEY_RES = await Card_Payment_Key(
     AUTH_API_RES.data.token,
     ORDER_REG_RES.data.amount_cents,

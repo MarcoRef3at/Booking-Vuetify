@@ -216,10 +216,10 @@ export default {
       }
     },
     touched(event) {
-      console.log("touched:", event);
+      // console.log("touched:", event);
     },
     touchemove(event) {
-      console.log("touchemove:", event);
+      // console.log("touchemove:", event);
     },
     timeFormater(timestamp, isEnd = false) {
       let date = new Date(timestamp);
