@@ -16,7 +16,7 @@
         :value="!loading ? 100 : 0"
       ></v-progress-linear>
 
-      <v-sheet height="100%" width="102%">
+      <v-sheet height="100%" :width="width">
         <v-calendar
           ref="calendar"
           v-model="focus"
@@ -161,6 +161,21 @@ export default {
       },
       set(value) {
         this.updateEvents(value);
+      }
+    },
+
+    width() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+          return "103%";
+        case "sm":
+          return "102%";
+        case "md":
+          return "101%";
+        case "lg":
+          return "101%";
+        case "xl":
+          return "101%";
       }
     }
   },

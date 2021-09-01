@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="hideScrollBar">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -76,3 +76,20 @@
     <!-- built files will be auto injected -->
   </body>
 </html>
+
+<style>
+  .hideScrollBar {
+    overflow-y: scroll; /* Add the ability to scroll */
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .hideScrollBar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .hideScrollBar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+</style>
