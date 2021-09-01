@@ -53,24 +53,6 @@
               {{ timeFormater(event.start) }} -
               {{ timeFormater(event.end, true) }}
             </div>
-
-            <!-- Remove Icon Button
-            <v-btn
-              v-if="event.editable"
-              icon
-              color="pink"
-              @click="deleteEvent(event)"
-              style="position: absolute; right: 0px;"
-            >
-              <v-icon>mdi-delete</v-icon>
-            </v-btn> -->
-
-            <!-- Drag down to extend event time -->
-            <!-- <div
-              v-if="event.editable"
-              class="v-event-drag-bottom"
-              @mousedown.stop="extendBottom(event)"
-            ></div> -->
           </template>
         </v-calendar>
 
@@ -80,11 +62,6 @@
         <div class="invisable-hours" style=" bottom: 7px; left: 35px ">
           12 AM
         </div>
-        <!-- <div style="    display: block;
-    position: relative;
-    top: -6px;
-    font-size: 10px;
-    padding-right: 4px;">-->
 
         <!-- Event Details Menu -->
         <v-dialog
@@ -134,7 +111,6 @@ export default {
 
     selectedOpen: false,
     value: "",
-    // events: [],
     colors: [
       "#2196F3",
       "#3F51B5",
@@ -303,7 +279,7 @@ export default {
           timed: true,
           editable: true
         };
-
+        console.log("created");
         this.events.push(this.createEvent);
         this.showEvent({ null: null, event: this.createEvent });
       }
