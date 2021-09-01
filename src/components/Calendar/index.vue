@@ -43,7 +43,13 @@
           :interval-count="8"
         >
           <template v-slot:event="{ event }">
-            <div class="v-event-draggable unSelectable">
+            <div
+              v-if="
+                $vuetify.breakpoint.name != 'sm' &&
+                  $vuetify.breakpoint.name != 'xs'
+              "
+              class="v-event-draggable unSelectable"
+            >
               {{ timeFormater(event.start) }} -
               {{ timeFormater(event.end, true) }}
             </div>
