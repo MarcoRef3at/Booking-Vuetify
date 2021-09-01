@@ -16,7 +16,7 @@
         :value="!loading ? 100 : 0"
       ></v-progress-linear>
 
-      <v-sheet height="600">
+      <v-sheet height="100%" width="102%">
         <v-calendar
           ref="calendar"
           v-model="focus"
@@ -67,6 +67,18 @@
             ></div> -->
           </template>
         </v-calendar>
+
+        <div class="invisable-hours" style="top: 152px; ">
+          4 PM
+        </div>
+        <div class="invisable-hours" style=" bottom: 7px; left: 35px ">
+          12 AM
+        </div>
+        <!-- <div style="    display: block;
+    position: relative;
+    top: -6px;
+    font-size: 10px;
+    padding-right: 4px;">-->
 
         <!-- Event Details Menu -->
         <v-dialog
@@ -436,6 +448,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.invisable-hours {
+  display: block;
+  position: absolute;
+  left: 40px;
+  font-size: 10px;
+  padding-right: 4px;
+  background-color: #ffffff;
+  color: #424242;
+}
+
 .v-event-draggable {
   padding-left: 6px;
 }
