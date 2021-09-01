@@ -13,7 +13,8 @@
           prepend-icon="mdi-clock-time-four-outline"
           readonly
           v-bind="attrs"
-          v-on="on"
+          :disabled="!isActive"
+          v-on="isActive && on"
         ></v-text-field>
       </template>
       <v-time-picker
@@ -30,7 +31,7 @@
 
 <script>
 export default {
-  props: ["title", "parentTime"],
+  props: ["title", "parentTime", "isActive"],
   computed: {
     time: {
       get() {

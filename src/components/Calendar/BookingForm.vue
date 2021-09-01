@@ -22,6 +22,7 @@
           :title="'Time From'"
           :parentTime="timeFrom"
           @setTime="setTimeFrom"
+          :isActive="true"
         />
       </v-col>
       <v-col cols="11" sm="6">
@@ -29,6 +30,7 @@
           :title="'Time to'"
           :parentTime="timeTo"
           @setTime="setTimeTo"
+          :isActive="false"
         />
       </v-col>
 
