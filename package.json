@@ -11,6 +11,8 @@
     "bootstrap-vue": "^2.21.2",
     "lottie-vuejs": "^0.4.0",
     "vue": "^2.6.11",
+    "vue-qr-generator": "^3.0.1",
+    "vue-qrcode-reader": "^3.0.3",
     "vue-router": "^3.5.2",
     "vuetify": "^2.4.0",
     "vuex": "^3.6.2"

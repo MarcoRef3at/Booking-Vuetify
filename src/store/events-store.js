@@ -51,59 +51,28 @@ const actions = {
 
       let endDate = new Date(end).setDate(new Date(end).getDate() + 8);
 
-      let body = {
-        StaffList: getStaffId(court),
-        Start: formatDate(startDate),
-        End: formatDate(endDate),
-        TimeZone: "Africa/Cairo"
-      };
       corsBridge
-        .post(endpoints.getStaffAvailability, body)
+        .get(endpoints.getStaffAvailability + 1, {
+          params: {
+            startDate: formatDate(startDate),
+            endDate: formatDate(endDate)
+          }
+        })
         .then(async events => {
           // let availableDates = events.data.StaffBookabilities[0].BookableTimeBlocks;
 
-          let availableDates = [];
-          await Promise.all(
-            events.data.StaffBookabilities.map(StaffBookabilities => {
-              return availableDates.push(StaffBookabilities.BookableTimeBlocks);
-            })
-          );
-
           let blocked = [];
-
           await Promise.all(
-            // Filter Available Dates and convert the unavailable slots to events
-            availableDates.map(courtAvailability => {
-              courtAvailability.map((available, index, elements) => {
-                if (index < elements.length - 1) {
-                  let slot = {
-                    start: available.End,
-                    end: elements[index + 1].Start
-                  };
-
-                  if (
-                    new Date(slot.start).getTime() ===
-                      new Date(
-                        new Date(slot.start).setHours(state.End_Time)
-                      ).getTime() &&
-                    new Date(slot.end).getTime() ===
-                      new Date(
-                        new Date(slot.start).setHours(state.Start_Time)
-                      ).getTime()
-                  ) {
-                    // If events in non-working hours .. neglect
-                  } else {
-                    return blocked.push(slot);
-                  }
-                }
-              });
+            events.data.data.map(reservations => {
+              return blocked.push(reservations);
             })
           );
-          if (court == null) {
-            // Let duplicated values only in blocked array
 
-            blocked = getDateRangesIntersection(blocked);
-          }
+          // if (court == null) {
+          //   // Let duplicated values only in blocked array
+
+          //   blocked = getDateRangesIntersection(blocked);
+          // }
 
           blocked.forEach(event => {
             event.start = new Date(event.start).getTime();
@@ -167,23 +136,16 @@ const actions = {
 
   bookEvent({ commit, getters }, payload) {
     let { CustomerName, CustomerEmail, CustomerPhone, courtName } = payload;
-    let Start = formatStart(new Date(state.selectedEvent.start));
     let body = {
-      ServiceId: getServiceId(courtName, false),
-      StaffList: getStaffId(courtName),
-      CustomerName,
-      CustomerEmail,
-      CustomerPhone,
-      CustomerNotes: "UnPaid",
-      Start,
-      StartInCustomerTimeZone: Start,
-      CustomerTimeZone: "Egypt Standard Time"
+      serviceId: 1,
+      start: state.selectedEvent.start,
+      end: state.selectedEvent.end
     };
     return new Promise((resolve, reject) => {
       corsBridge
         .post(endpoints.CreateBooking, body)
         .then(res => {
-          resolve(res.data); //returns x in .then
+          resolve(res.data);
         })
         .catch(e => {
           reject(e.response.data);
