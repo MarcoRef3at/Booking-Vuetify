@@ -78,7 +78,7 @@ const actions = {
             event.start = new Date(event.start).getTime();
             event.end = new Date(event.end).getTime();
             event.name = "Blocked";
-            event.color = "#757575";
+            event.color = `${event.Transactions ? "#757575" : "#85BFDA"}`;
             event.timed = true;
             event.editable = false;
           });
