@@ -1,5 +1,5 @@
 {
-  "CORS_BRIDGE": "http://localhost:5000/",
+  "CORS_BRIDGE": "http://62.241.137.198:5000/",
   "getStaffAvailability": "reservation/service/",
   "CreateBooking": "/reservation",
   "CreateTransaction": "/transaction",
