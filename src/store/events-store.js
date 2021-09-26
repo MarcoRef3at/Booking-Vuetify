@@ -108,27 +108,27 @@ const actions = {
     });
   },
   pay({ dispatch, commit }, payload) {
-    let { CustomerName, CustomerEmail, CustomerPhone, courtName } = payload;
-    let Start = formatStart(new Date(state.selectedEvent.start));
+    let { customerName, customerEmail, customerPhone, courtName } = payload;
+    let start = formatStart(new Date(state.selectedEvent.start));
+    let end = formatStart(new Date(state.selectedEvent.end));
     let body = {
-      ServiceId: getServiceId(courtName, true),
-      StaffList: getStaffId(courtName),
-      CustomerName,
-      CustomerEmail,
-      CustomerPhone,
-      Start,
-      StartInCustomerTimeZone: Start,
-      CustomerTimeZone: "Egypt Standard Time"
+      serviceId: 1,
+      customerName,
+      customerEmail,
+      customerPhone,
+      start,
+      end
     };
     // setTimeout(() => {
     return new Promise((resolve, reject) => {
-      getPaymobIFrameToken(300, body, courtName)
-        .then(iframeToken => {
-          commit("updateIframeToken", iframeToken);
+      corsBridge
+        .post(endpoints.CreateTransaction, body)
+        .then(res => {
+          commit("updateIframeToken", res.data.iFrameToken);
           resolve();
         })
-        .catch(err => {
-          reject(err.response.data.items.name); //returns y in .catch
+        .catch(e => {
+          reject(e.response.data);
         });
     });
     // }, 50);

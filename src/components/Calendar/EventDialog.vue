@@ -188,9 +188,9 @@ export default {
       if (this.validate()) {
         this.payNowLoading = true;
         this.pay({
-          CustomerName: this.CustomerName,
-          CustomerEmail: this.CustomerEmail,
-          CustomerPhone: this.CustomerPhone,
+          customerName: this.CustomerName,
+          customerEmail: this.CustomerEmail,
+          customerPhone: this.CustomerPhone,
           courtName:
             "court" in this.$route.query ? this.$route.query.court : null
         })
@@ -198,7 +198,7 @@ export default {
             this.$router.push("payment");
           })
           .catch(e => {
-            this.errorMessage = `Somthing Went Wrong , ${e} `;
+            this.errorMessage = `Somthing Went Wrong , ${e.error} `;
           })
           .finally(() => (this.payNowLoading = false));
       }

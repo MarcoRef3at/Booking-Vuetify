@@ -1,7 +1,8 @@
 {
-  "CORS_BRIDGE": "http://localhost:5001/",
+  "CORS_BRIDGE": "http://localhost:5000/",
   "getStaffAvailability": "reservation/service/",
   "CreateBooking": "/reservation",
+  "CreateTransaction": "/transaction",
 
   "PAYMOB_API": "https://accept.paymobsolutions.com/api",
   "AUTH_API": "/auth/tokens",
