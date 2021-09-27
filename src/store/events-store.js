@@ -50,9 +50,12 @@ const actions = {
       let startDate = new Date(start).setDate(new Date(start).getDate() - 8);
 
       let endDate = new Date(end).setDate(new Date(end).getDate() + 8);
+      let endpoint = court
+        ? endpoints.getStaffAvailability + getServiceId(court, true)
+        : endpoints.getBusinessAvailability + 1;
 
       corsBridge
-        .get(endpoints.getStaffAvailability + 1, {
+        .get(endpoint, {
           params: {
             startDate: formatDate(startDate),
             endDate: formatDate(endDate)
@@ -68,11 +71,12 @@ const actions = {
             })
           );
 
-          // if (court == null) {
-          //   // Let duplicated values only in blocked array
+          if (court == null) {
+            // Let duplicated values only in blocked array
 
-          //   blocked = getDateRangesIntersection(blocked);
-          // }
+            blocked = getDateRangesIntersection(blocked);
+            console.log("blocked:", blocked);
+          }
 
           blocked.forEach(event => {
             event.start = new Date(event.start).getTime();

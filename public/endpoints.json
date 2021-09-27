@@ -1,6 +1,7 @@
 {
   "CORS_BRIDGE": "http://62.241.137.198:5000/",
   "getStaffAvailability": "reservation/service/",
+  "getBusinessAvailability": "reservation/business/",
   "CreateBooking": "/reservation",
   "CreateTransaction": "/transaction",
 
