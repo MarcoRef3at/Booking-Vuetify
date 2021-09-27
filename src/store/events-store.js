@@ -1,12 +1,10 @@
-import { corsBridge, paymobApi } from "../api/client";
+import { corsBridge } from "../api/client";
 import endpoints from "../../public/endpoints.json";
-import getPaymobIFrameToken from "../api/paymob_request";
 import {
   formatDate,
   formatStart,
   getDateRangesIntersection,
-  getServiceId,
-  getStaffId
+  getServiceId
 } from "./../functions/index";
 const state = {
   eventsArr: [],
@@ -111,6 +109,7 @@ const actions = {
         });
     });
   },
+
   pay({ dispatch, commit }, payload) {
     let { customerName, customerEmail, customerPhone, courtName } = payload;
     let start = formatStart(new Date(state.selectedEvent.start));

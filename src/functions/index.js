@@ -90,15 +90,6 @@ export const formatStart = date => {
   return `${year}-${month}-${day}T${hours}:${minutes}:00`;
 };
 
-export const getStaffId = court => {
-  let courtId =
-    court == "WPT Court"
-      ? [config.WPT_STAFF_ID]
-      : court == "Panoramic Court"
-      ? [config.PANORAMIC_STAFF_ID]
-      : [config.WPT_STAFF_ID, config.PANORAMIC_STAFF_ID];
-  return courtId;
-};
 export const getServiceId = (court, isPaid) => {
   if (court == "WPT Court") {
     if (isPaid) {
