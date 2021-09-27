@@ -1,37 +1,44 @@
 <template>
   <div class="hello">
     <section id="hero">
-      <div class="hero-container">
-        <v-row align="center" no-gutters>
-          <v-col>
-            <CourtCarousel
-              class="pa-2 "
-              :slides="slides1"
-              title="WPT Court"
-              :description="description1"
-              :subtitle="subtitle1"
-            />
-          </v-col>
-          <v-col>
-            <CourtCarousel
-              class="pa-2 "
-              :slides="slides2"
-              title="Panoramic Court"
-              :description="description2"
-              :subtitle="subtitle2"
-            />
-          </v-col>
-          <section id="cta" class="booknow">
-            <v-btn
-              rounded
-              color="primary"
-              dark
-              @click="$router.push('/calendar')"
-            >
-              Book Any Court
-            </v-btn>
-          </section>
-        </v-row>
+      <div class="hero-container pt-2">
+        <v-card
+          elevation="24"
+          color="rgb(123, 206, 234, 0.2)"
+          :style="
+            $vuetify.breakpoint.width < 720 ? 'transform: scale(0.75);' : ''
+          "
+        >
+          <v-btn
+            rounded
+            class="mt-5"
+            color="primary"
+            dark
+            @click="$router.push('/calendar')"
+          >
+            Book Any Court
+          </v-btn>
+          <v-row align="center" no-gutters class="py-2 ">
+            <v-col>
+              <CourtCarousel
+                class="pa-2 "
+                :slides="slides1"
+                title="WPT Court"
+                :description="description1"
+                :subtitle="subtitle1"
+              />
+            </v-col>
+            <v-col>
+              <CourtCarousel
+                class="pb-2 "
+                :slides="slides2"
+                title="Panoramic Court"
+                :description="description2"
+                :subtitle="subtitle2"
+              />
+            </v-col>
+          </v-row>
+        </v-card>
       </div>
     </section>
   </div>

@@ -112,7 +112,7 @@ const actions = {
     let start = formatStart(new Date(state.selectedEvent.start));
     let end = formatStart(new Date(state.selectedEvent.end));
     let body = {
-      serviceId: 1,
+      serviceId: getServiceId(courtName, true),
       customerName,
       customerEmail,
       customerPhone,
@@ -137,7 +137,7 @@ const actions = {
   bookEvent({ commit, getters }, payload) {
     let { CustomerName, CustomerEmail, CustomerPhone, courtName } = payload;
     let body = {
-      serviceId: 1,
+      serviceId: getServiceId(courtName, true),
       start: state.selectedEvent.start,
       end: state.selectedEvent.end
     };
