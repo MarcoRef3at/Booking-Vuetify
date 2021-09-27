@@ -4,6 +4,7 @@
   "getBusinessAvailability": "reservation/business/",
   "CreateBooking": "/reservation",
   "CreateTransaction": "/transaction",
+  "CreateTransByBusinessId": "/transaction/business/",
 
   "PAYMOB_API": "https://accept.paymobsolutions.com/api",
   "AUTH_API": "/auth/tokens",

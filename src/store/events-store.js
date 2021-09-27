@@ -115,17 +115,22 @@ const actions = {
     let start = formatStart(new Date(state.selectedEvent.start));
     let end = formatStart(new Date(state.selectedEvent.end));
     let body = {
-      serviceId: getServiceId(courtName, true),
+      ...(courtName && { serviceId: getServiceId(courtName, true) }),
       customerName,
       customerEmail,
       customerPhone,
       start,
       end
     };
+
     // setTimeout(() => {
+
     return new Promise((resolve, reject) => {
+      let endpoint = courtName
+        ? endpoints.CreateTransaction
+        : endpoints.CreateTransByBusinessId + 1;
       corsBridge
-        .post(endpoints.CreateTransaction, body)
+        .post(endpoint, body)
         .then(res => {
           commit("updateIframeToken", res.data.iFrameToken);
           resolve();
