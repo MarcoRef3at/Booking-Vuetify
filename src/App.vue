@@ -2,7 +2,7 @@
   <v-app class="fill-height">
     <v-app-bar app color="rgba(103, 176, 209, 0.8)" dark>
       <div class="d-flex align-center">
-        <!-- <a @click="$router.push('/')">
+        <a @click="$router.push('/')">
           <v-img
             alt="Home Page"
             class="shrink mt-1 "
@@ -10,7 +10,7 @@
             min-width="100"
             :src="logoUrl"
             width="100"
-        /></a> -->
+        /></a>
       </div>
 
       <v-spacer></v-spacer>
