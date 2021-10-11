@@ -63,6 +63,13 @@
           12 AM
         </div>
 
+        <!-- Notification -->
+        <v-snackbar :value="notification" absolute shaped color="error">
+          <div class="text-center">
+            Sorry, you can't reserve past dates.
+          </div>
+        </v-snackbar>
+
         <!-- Event Details Menu -->
         <v-dialog
           v-model="selectedOpen"
@@ -108,7 +115,7 @@ export default {
     type: "week",
     selectedCourt: null,
     loading: false,
-
+    notification: false,
     selectedOpen: false,
     value: "",
     colors: [
@@ -282,6 +289,11 @@ export default {
         console.log("created");
         this.events.push(this.createEvent);
         this.showEvent({ null: null, event: this.createEvent });
+      } else {
+        this.notification = true;
+        setTimeout(() => {
+          this.notification = false;
+        }, 1000);
       }
     },
     extendBottom(event) {
